@@ -33,7 +33,7 @@ RUN npm i -g tsx
 ENV PRISMA_CLI_BINARY_TARGETS=linux-musl
 
 # Gera o Prisma Client
-#RUN npx prisma generate
+RUN npx prisma generate
 
 # Expõe a porta
 EXPOSE ${PORT}
