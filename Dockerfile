@@ -1,42 +1,15 @@
-FROM node:current-alpine
+FROM node:20-slim
 
-ARG PORT
-ENV PORT=${PORT}
-
-# Define o diretório de trabalho
 WORKDIR /app
 
-# Instala dependências do sistema para Prisma
-RUN apk add --no-cache \
-  bash \
-  curl \
-  python3 \
-  openssl \
-  openssl-dev \
-  libc6-compat
+# Dependências do Prisma
+RUN apt-get update && apt-get install -y openssl
+RUN apt-get install -y tini && rm -rf /var/lib/apt/lists/*
 
-# Copia apenas os arquivos de dependência primeiro para melhor aproveitamento do cache
 COPY package*.json ./
 
-# Copia o restante dos arquivos
 COPY . .
 
-# Instala as dependências do projeto
-RUN npm cache clean --force && \
-    rm -rf node_modules && \
-    npm install --include=dev --verbose && \
-    ls -la node_modules || (echo "Falha ao instalar dependências" && exit 1)
+ENTRYPOINT ["/usr/bin/tini", "--"]
 
-RUN npm i -g tsx
-
-# Define a engine correta para o Prisma no Alpine
-ENV PRISMA_CLI_BINARY_TARGETS=linux-musl
-
-# Gera o Prisma Client
-RUN npx prisma generate
-
-# Expõe a porta
-EXPOSE ${PORT}
-
-# Comando para rodar a aplicação
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "start:dev"]
