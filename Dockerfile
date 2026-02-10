@@ -1,15 +1,30 @@
-FROM node:20-slim
+FROM node:24-alpine
 
-WORKDIR /app
+ARG PORT
+ENV PORT=${PORT}
 
-# Dependências do Prisma
-RUN apt-get update && apt-get install -y openssl
-RUN apt-get install -y tini && rm -rf /var/lib/apt/lists/*
+WORKDIR /usr/src/app
+
+RUN apk add --no-cache netcat-openbsd
 
 COPY package*.json ./
+COPY prisma ./prisma
+
+RUN npm install
+
+RUN npm install -g @nestjs/cli
 
 COPY . .
 
-ENTRYPOINT ["/usr/bin/tini", "--"]
+RUN npx prisma generate
 
-CMD ["npm", "run", "start:dev"]
+
+COPY docker-entrypoint.sh /usr/local/bin
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+ENTRYPOINT [ "docker-entrypoint.sh" ]
+
+
+EXPOSE 3000
+
+CMD [ "npm", "run", "start:dev" ]

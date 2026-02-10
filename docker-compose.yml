@@ -2,28 +2,22 @@ services:
   api:
     build:
       context: .
+      dockerfile: Dockerfile
       args:
         PORT: ${PORT}
         DATABASE_URL: ${DATABASE_URL}
-    container_name: nestjs
     ports:
       - "${PORT}:${PORT}"
     volumes:
-      - .:/app
+      - ./:/usr/src/app
       - /usr/src/app/node_modules
-    stop_signal: SIGINT
-    stop_grace_period: 1s
     environment:
-      - CHOKIDAR_USEPOLLING=true
-      - WATCHPACK_POLLING=true
+      - DATABASE_URL=${DATABASE_URL}
       - NODE_ENV=development
-    command: >
-      sh -c "npm install &&
-               npx prisma generate &&
-               npm run start:dev"
     depends_on:
       - postgres
-    restart: always
+    command: sh -c "npx prisma migrate deploy && npm run start:dev"
+    restart: unless-stopped
 
   postgres:
     image: bitnami/postgresql:latest
