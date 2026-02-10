@@ -1,0 +1,33 @@
+services:
+  api:
+    image: node:current-alpine
+    container_name: nestjs
+    working_dir: /app
+    ports:
+      - "${PORT}:${PORT}"
+    depends_on:
+      - postgres
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    command: >
+      sh -c "npm install &&
+               npm run start dev"
+    restart: always
+
+  postgres:
+    image: "bitnami/postgresql:latest"
+    container_name: postgres-nestjs
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: nestjs
+    volumes:
+      - database-rocketseat:/bitnami/postgresql
+
+volumes:
+  database-rocketseat:
