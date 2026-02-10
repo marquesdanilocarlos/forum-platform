@@ -4,6 +4,8 @@ import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify'
+import { ConfigService } from '@nestjs/config'
+import { EnvSchema } from './validations/env.schema'
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -11,6 +13,8 @@ async function bootstrap() {
     new FastifyAdapter(),
   )
   app.enableShutdownHooks()
-  await app.listen(process.env.PORT ?? 3333, '0.0.0.0')
+  const configService: ConfigService<EnvSchema, true> = app.get(ConfigService)
+  const port = configService.get('PORT', { infer: true })
+  await app.listen(port, '0.0.0.0')
 }
 bootstrap()
