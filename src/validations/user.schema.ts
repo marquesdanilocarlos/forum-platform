@@ -12,3 +12,8 @@ export const authSchema = z.object({
   password: z.string(),
 })
 export type AuthBodyType = z.infer<typeof authSchema>
+
+export const tokenSchema = z.object({
+  sub: z.uuid(),
+})
+export type TokenPayloadType = z.infer<typeof tokenSchema>
