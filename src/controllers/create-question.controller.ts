@@ -29,7 +29,6 @@ export class CreateQuestionController {
         slug: this.generateSlug(title),
       },
     })
-    return 'Create Question controller'
   }
 
   private generateSlug(text: string): string {
