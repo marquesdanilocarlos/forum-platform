@@ -1,0 +1,4 @@
+#!/bin/bash
+openssl genpkey -algorithm RSA -out private.key -pkeyopt rsa_keygen_bits:2048
+openssl rsa -pubout -in private.key -out public.key
+chmod a+r private.key*

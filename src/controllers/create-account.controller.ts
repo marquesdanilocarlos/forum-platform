@@ -10,7 +10,7 @@ import { UserCreateInput } from '../../generated/prisma/models/User'
 import { hash } from 'bcryptjs'
 import { ZodValidationPipe } from '../pipes/zod-validation.pipe'
 import {
-  createAccountBodySchema,
+  createAccountSchema,
   CreateAccountBodyType,
 } from '../validations/user.schema'
 
@@ -19,9 +19,9 @@ export class CreateAccountController {
   constructor(private readonly prisma: PrismaService) {}
 
   @Post()
-  @UsePipes(new ZodValidationPipe(createAccountBodySchema))
+  @UsePipes(new ZodValidationPipe(createAccountSchema))
   async handle(@Body() body: CreateAccountBodyType) {
-    const { name, email, password } = createAccountBodySchema.parse(body)
+    const { name, email, password } = createAccountSchema.parse(body)
 
     const userWithSameEmail = await this.prisma.user.findUnique({
       where: {
