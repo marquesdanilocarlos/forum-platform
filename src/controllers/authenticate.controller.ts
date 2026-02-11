@@ -7,10 +7,10 @@ import {
   UsePipes,
 } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
-import { AuthBodyType, authSchema } from '../validations/user.schema'
-import { PrismaService } from '../prisma/prisma.service'
+import { AuthBodyType, authSchema } from '@/validations/user.schema'
+import { PrismaService } from '@/prisma/prisma.service'
 import { compare } from 'bcryptjs'
-import { ZodValidationPipe } from '../pipes/zod-validation.pipe'
+import { ZodValidationPipe } from '@/pipes/zod-validation.pipe'
 
 @Controller('/authenticate')
 export class AuthenticateController {

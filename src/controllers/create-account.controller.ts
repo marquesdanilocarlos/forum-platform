@@ -5,14 +5,14 @@ import {
   Post,
   UsePipes,
 } from '@nestjs/common'
-import { PrismaService } from '../prisma/prisma.service'
+import { PrismaService } from '@/prisma/prisma.service'
 import { UserCreateInput } from '../../generated/prisma/models/User'
 import { hash } from 'bcryptjs'
-import { ZodValidationPipe } from '../pipes/zod-validation.pipe'
+import { ZodValidationPipe } from '@/pipes/zod-validation.pipe'
 import {
   createAccountSchema,
   CreateAccountBodyType,
-} from '../validations/user.schema'
+} from '@/validations/user.schema'
 
 @Controller('/accounts')
 export class CreateAccountController {

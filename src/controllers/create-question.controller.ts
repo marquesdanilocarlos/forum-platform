@@ -1,13 +1,13 @@
 import { Body, Controller, Post, UseGuards } from '@nestjs/common'
-import { PrismaService } from '../prisma/prisma.service'
-import { JwtAuthGuard } from '../auth/jwt-auth.guard'
-import { CurrentUser } from '../auth/current-user.decorator'
-import { TokenPayloadType } from '../validations/user.schema'
-import { ZodValidationPipe } from '../pipes/zod-validation.pipe'
+import { PrismaService } from '@/prisma/prisma.service'
+import { JwtAuthGuard } from '@/auth/jwt-auth.guard'
+import { CurrentUser } from '@/auth/current-user.decorator'
+import { TokenPayloadType } from '@/validations/user.schema'
+import { ZodValidationPipe } from '@/pipes/zod-validation.pipe'
 import {
   createQuestionSchema,
   CreateQuestionType,
-} from '../validations/question.schema'
+} from '@/validations/question.schema'
 
 @Controller('/questions')
 @UseGuards(JwtAuthGuard)
