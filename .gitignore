@@ -13,5 +13,6 @@ yarn-error.log*
 /dist
 /generated/prisma
 .env
+.env.test
 security/private.key
 security/public.key

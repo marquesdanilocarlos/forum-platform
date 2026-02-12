@@ -5,6 +5,7 @@ export default defineConfig({
   test: {
     globals: true,
     alias: {
+      '@': './src',
       '@src': './src',
       '@test': './test',
     },
@@ -12,6 +13,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
+      '@': './src',
       '@src': './src',
       '@test': './test',
     },
