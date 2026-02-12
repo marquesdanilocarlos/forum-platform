@@ -13,8 +13,8 @@ export type QuestionProps = {
   slug: Slug
   attachments: QuestionAttachmentList
   createdAt: Date
-  updatedAt?: Date
-  bestAnswerId?: UniqueEntityId
+  updatedAt?: Date | null
+  bestAnswerId?: UniqueEntityId | null
 }
 
 export default class Question extends AggregateRoot<QuestionProps> {
@@ -78,13 +78,14 @@ export default class Question extends AggregateRoot<QuestionProps> {
     this.touch()
   }
 
-  set bestAnswerId(bestAnswerId: UniqueEntityId | undefined) {
-    if (bestAnswerId === undefined) {
+  set bestAnswerId(bestAnswerId: UniqueEntityId | undefined | null) {
+    if (bestAnswerId === undefined || bestAnswerId === null) {
       return
     }
 
     if (
       this.props.bestAnswerId === undefined ||
+      this.props.bestAnswerId === null ||
       !this.props.bestAnswerId.equals(bestAnswerId)
     ) {
       this.addDomainEvent(
