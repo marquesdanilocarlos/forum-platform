@@ -1,11 +1,11 @@
 import { NestFactory } from '@nestjs/core'
-import { AppModule } from './app.module'
+import { AppModule } from './infra/app.module'
 import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify'
 import { ConfigService } from '@nestjs/config'
-import { EnvSchema } from './validations/env.schema'
+import { EnvSchema } from '@/infra/http/validations/env.schema'
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
