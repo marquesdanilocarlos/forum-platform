@@ -23,7 +23,7 @@ describe('Autenticação (E2E)', () => {
     await prisma.user.create({
       data: {
         name: 'John Doe',
-        email: 'john.doe2@example.com',
+        email: 'john.doe9@example.com',
         password: await hash('123456', 8),
       },
     })
@@ -31,7 +31,7 @@ describe('Autenticação (E2E)', () => {
     const response = await request(app.getHttpServer())
       .post('/authenticate')
       .send({
-        email: 'john.doe@example.com',
+        email: 'john.doe9@example.com',
         password: '123456',
       })
     expect(response.statusCode).toBe(200)

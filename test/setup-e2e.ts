@@ -21,7 +21,7 @@ async function dropTestSchema() {
   }
 }
 
-afterAll(async () => {
+beforeAll(async () => {
   console.log('🧹 Limpando ambiente de testes...')
   await dropTestSchema()
   console.log('✅ Cleanup concluído')

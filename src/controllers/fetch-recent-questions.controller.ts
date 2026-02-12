@@ -17,7 +17,7 @@ export class FetchRecentQuestionsController {
     @Query('page', new ZodValidationPipe(pageQueryParamSchema))
     page: PageQueryParamType,
   ) {
-    const perPage = 1
+    const perPage = 20
     const questions = await this.prisma.question.findMany({
       take: perPage,
       skip: (page - 1) * perPage,
