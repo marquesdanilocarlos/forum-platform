@@ -5,7 +5,7 @@ import {
   Post,
   UsePipes,
 } from '@nestjs/common'
-import { PrismaService } from '@/infra/prisma/prisma.service'
+import { PrismaService } from '@/infra/database/prisma/prisma.service'
 import { UserCreateInput } from '../../../../generated/prisma/models/User'
 import { hash } from 'bcryptjs'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation.pipe'
