@@ -62,7 +62,7 @@ export class PrismaQuestionsRepository implements QuestionsRepository {
       take: 20,
     })
 
-    return questions.map(PrismaQuestionMapper.toDomain)
+    return questions.map((question) => PrismaQuestionMapper.toDomain(question))
   }
 
   async save(question: Question): Promise<Question> {
