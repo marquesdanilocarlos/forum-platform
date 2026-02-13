@@ -3,6 +3,7 @@ import Question from '@/domain/forum/enterprise/entities/question'
 import UniqueEntityId from '@/core/entities/unique-entity-id'
 import QuestionAttachment from '@/domain/forum/enterprise/entities/question-attachment'
 import QuestionAttachmentList from '@/domain/forum/enterprise/entities/question-attachment-list'
+import { Inject, Injectable } from '@nestjs/common'
 
 export type CreateQuestionInput = {
   authorId: string
@@ -15,6 +16,7 @@ type CreateQuestionOutput = {
   question: Question
 }
 
+@Injectable()
 export default class CreateQuestion {
   constructor(private questionsRepository: QuestionsRepository) {}
 
