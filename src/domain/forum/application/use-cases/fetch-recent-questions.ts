@@ -18,7 +18,6 @@ export default class FetchRecentQuestions {
     page,
   }: FetchRecentQuestionsInput): Promise<FetchRecentQuestionsOutput> {
     const questions = await this.questionsRepository.findManyRecent({ page })
-
     return { questions }
   }
 }
