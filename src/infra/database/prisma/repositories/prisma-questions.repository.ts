@@ -25,22 +25,55 @@ export class PrismaQuestionsRepository implements QuestionsRepository {
   }
 
   async create(question: Question): Promise<Question> {
-    return Promise.resolve(question)
+    const data = PrismaQuestionMapper.toPersistent(question)
+    await this.prisma.question.create({ data })
+
+    return question
   }
 
   async delete(question: Question): Promise<void> {
-    return Promise.resolve()
+    await this.prisma.question.delete({
+      where: {
+        id: question.id.value,
+      },
+    })
   }
 
-  findBySlug(slug: Slug): Promise<Question | null> {
-    return Promise.resolve(null)
+  async findBySlug(slug: Slug): Promise<Question | null> {
+    const question = await this.prisma.question.findUnique({
+      where: {
+        slug: slug.value,
+      },
+    })
+
+    if (!question) {
+      return null
+    }
+
+    return PrismaQuestionMapper.toDomain(question)
   }
 
-  findManyRecent(params: PaginationParams): Promise<Question[]> {
-    return Promise.resolve([])
+  async findManyRecent(params: PaginationParams): Promise<Question[]> {
+    const questions = await this.prisma.question.findMany({
+      orderBy: {
+        createdAt: 'desc',
+      },
+      skip: (params.page - 1) * 20,
+      take: 20,
+    })
+
+    return questions.map(PrismaQuestionMapper.toDomain)
   }
 
-  save(question: Question): Promise<Question> {
-    return Promise.resolve(question)
+  async save(question: Question): Promise<Question> {
+    const data = PrismaQuestionMapper.toPersistent(question)
+    await this.prisma.question.update({
+      where: {
+        id: data.id,
+      },
+      data,
+    })
+
+    return question
   }
 }
