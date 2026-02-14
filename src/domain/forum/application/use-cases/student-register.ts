@@ -4,7 +4,7 @@ import Hasher from '@/domain/forum/application/cryptography/hasher'
 import StudentAlreadyExistsError from '@/domain/forum/application/use-cases/errors/student-already-exists.error'
 import { Injectable } from '@nestjs/common'
 
-type StudentRegisterInput = {
+export type StudentRegisterInput = {
   name: string
   email: string
   password: string

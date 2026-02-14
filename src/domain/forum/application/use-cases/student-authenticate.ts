@@ -14,7 +14,7 @@ type StudentAuthenticateOutput = {
 }
 
 @Injectable()
-export default abstract class StudentAuthenticate {
+export default class StudentAuthenticate {
   constructor(
     private studentsRepository: StudentsRepository,
     private hashComparer: HashComparer,
