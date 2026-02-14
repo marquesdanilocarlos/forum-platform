@@ -15,7 +15,7 @@ type StudentRegisterOutput = {
 }
 
 @Injectable()
-export default abstract class StudentRegister {
+export default class StudentRegister {
   constructor(
     private studentsRepository: StudentsRepository,
     private hashGenerator: Hasher,
