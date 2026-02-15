@@ -14,9 +14,11 @@ export class AuthenticateController {
   async handle(@Body() body: AuthBodyType) {
     const { email, password } = authSchema.parse(body)
 
-    return await this.studentAuthenticate.execute({
+    const result = await this.studentAuthenticate.execute({
       email,
       password,
     })
+
+    return { access_token: result.accessToken }
   }
 }
