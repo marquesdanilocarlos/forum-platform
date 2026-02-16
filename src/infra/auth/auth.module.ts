@@ -1,21 +1,22 @@
 import { Module } from '@nestjs/common'
 import { PassportModule } from '@nestjs/passport'
 import { JwtModule } from '@nestjs/jwt'
-import { ConfigService } from '@nestjs/config'
-import { EnvSchema } from '@/infra/http/validations/env.schema'
 import * as fs from 'node:fs'
 import { APP_GUARD } from '@nestjs/core'
 import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard'
+import EnvService from '@/infra/env/env-service'
+import { EnvModule } from '@/infra/env/env.module'
 
 @Module({
   imports: [
     PassportModule,
     JwtModule.registerAsync({
-      inject: [ConfigService],
+      imports: [EnvModule],
+      inject: [EnvService],
       global: true,
-      useFactory(config: ConfigService<EnvSchema, true>) {
-        const privateKeyPath = config.get('JWT_PRIVATE_KEY', { infer: true })
-        const publicKeyPath = config.get('JWT_PUBLIC_KEY', { infer: true })
+      useFactory(env: EnvService) {
+        const privateKeyPath = env.get('JWT_PRIVATE_KEY')
+        const publicKeyPath = env.get('JWT_PUBLIC_KEY')
         const privateKey = fs.readFileSync(privateKeyPath)
         const publicKey = fs.readFileSync(publicKeyPath)
         return {
@@ -31,6 +32,6 @@ import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard'
       },
     }),
   ],
-  providers: [{ provide: APP_GUARD, useClass: JwtAuthGuard }],
+  providers: [{ provide: APP_GUARD, useClass: JwtAuthGuard }, EnvService],
 })
 export class AuthModule {}
