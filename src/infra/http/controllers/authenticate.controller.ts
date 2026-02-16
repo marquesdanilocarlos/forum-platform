@@ -11,6 +11,7 @@ import { AuthBodyType, authSchema } from '@/infra/http/validations/user.schema'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation.pipe'
 import StudentAuthenticate from '@/domain/forum/application/use-cases/student-authenticate'
 import WrongCredentialsError from '@/domain/forum/application/use-cases/errors/wrong-credentials.error'
+import { Public } from '@/infra/auth/public'
 
 @Controller('/authenticate')
 export class AuthenticateController {
@@ -19,6 +20,7 @@ export class AuthenticateController {
   @Post()
   @UsePipes(new ZodValidationPipe(authSchema))
   @HttpCode(200)
+  @Public()
   async handle(@Body() body: AuthBodyType) {
     const { email, password } = authSchema.parse(body)
 

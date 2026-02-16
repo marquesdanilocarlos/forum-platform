@@ -1,11 +1,4 @@
-import {
-  Controller,
-  Get,
-  NotFoundException,
-  Query,
-  UseGuards,
-} from '@nestjs/common'
-import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard'
+import { Controller, Get, NotFoundException, Query } from '@nestjs/common'
 import {
   pageQueryParamSchema,
   PageQueryParamType,
@@ -15,7 +8,6 @@ import FetchRecentQuestions from '@/domain/forum/application/use-cases/fetch-rec
 import { QuestionPresenter } from '@/infra/http/presenter/question-presenter'
 
 @Controller('/questions')
-@UseGuards(JwtAuthGuard)
 export class FetchRecentQuestionsController {
   constructor(private readonly fetchRecentQuestions: FetchRecentQuestions) {}
 

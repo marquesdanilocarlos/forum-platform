@@ -1,5 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common'
-import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard'
+import { Body, Controller, Post } from '@nestjs/common'
 import { CurrentUser } from '@/infra/auth/current-user.decorator'
 import { TokenPayloadType } from '@/infra/http/validations/user.schema'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation.pipe'
@@ -10,7 +9,6 @@ import {
 import CreateQuestion from '@/domain/forum/application/use-cases/create-question'
 
 @Controller('/questions')
-@UseGuards(JwtAuthGuard)
 export class CreateQuestionController {
   constructor(private readonly createQuestion: CreateQuestion) {}
 

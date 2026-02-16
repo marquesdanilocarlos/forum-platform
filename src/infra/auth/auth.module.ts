@@ -4,6 +4,8 @@ import { JwtModule } from '@nestjs/jwt'
 import { ConfigService } from '@nestjs/config'
 import { EnvSchema } from '@/infra/http/validations/env.schema'
 import * as fs from 'node:fs'
+import { APP_GUARD } from '@nestjs/core'
+import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard'
 
 @Module({
   imports: [
@@ -29,5 +31,6 @@ import * as fs from 'node:fs'
       },
     }),
   ],
+  providers: [{ provide: APP_GUARD, useClass: JwtAuthGuard }],
 })
 export class AuthModule {}

@@ -12,6 +12,7 @@ import {
 } from '@/infra/http/validations/user.schema'
 import StudentRegister from '@/domain/forum/application/use-cases/student-register'
 import StudentAlreadyExistsError from '@/domain/forum/application/use-cases/errors/student-already-exists.error'
+import { Public } from '@/infra/auth/public'
 
 @Controller('/accounts')
 export class CreateAccountController {
@@ -19,6 +20,7 @@ export class CreateAccountController {
 
   @Post()
   @UsePipes(new ZodValidationPipe(createAccountSchema))
+  @Public()
   async handle(@Body() body: CreateAccountBodyType) {
     const { name, email, password } = createAccountSchema.parse(body)
 
