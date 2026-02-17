@@ -15,7 +15,7 @@ describe('Consulta de pergunta', () => {
   it('Deve obter uma pergunta pelo slug', async () => {
     const newQuestion: Question = makeQuestion()
     await inMemoryQuestionsRepository.create(newQuestion)
-    const { question } = await sut.execute({ slug: newQuestion.slug })
+    const { question } = await sut.execute({ slug: newQuestion.slug.value })
     expect(question.id).toBeTruthy()
     expect(question.slug).toEqual(newQuestion.slug)
   })

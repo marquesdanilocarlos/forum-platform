@@ -30,7 +30,8 @@ export default class InMemoryQuestionsRepository implements QuestionsRepository 
 
   findBySlug(slug: Slug): Promise<Question | null> {
     const question =
-      this.questions.find((question) => question.slug === slug) ?? null
+      this.questions.find((question) => question.slug.value === slug.value) ??
+      null
     return Promise.resolve(question)
   }
 
