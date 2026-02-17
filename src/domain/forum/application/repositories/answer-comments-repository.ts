@@ -3,7 +3,7 @@ import PaginationParams from '@/core/types/pagination-params'
 
 export default interface AnswerCommentsRepository {
   findById(answerCommentId: string): Promise<AnswerComment | null>
-  create(answerComment: AnswerComment): Promise<AnswerComment>
+  create(answerComment: AnswerComment): Promise<void>
   delete(answerComment: AnswerComment): Promise<void>
   findManyByAnswerId(
     answerId: string,
