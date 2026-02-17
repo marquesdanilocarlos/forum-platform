@@ -1,0 +1,19 @@
+import { Attachment as PrismaAttachment } from '../../../../../generated/prisma/client'
+import AnswerAttachment from '@/domain/forum/enterprise/entities/answer-attachment'
+import UniqueEntityId from '@/core/entities/unique-entity-id'
+
+export class PrismaAnswerAttachmentMapper {
+  static toDomain(raw: PrismaAttachment): AnswerAttachment {
+    if (!raw.answerId) {
+      throw new Error('Anexo não pertence a uma resposta.')
+    }
+
+    return AnswerAttachment.create(
+      {
+        attachmentId: new UniqueEntityId(raw.id),
+        answerId: new UniqueEntityId(raw.answerId),
+      },
+      new UniqueEntityId(raw.id),
+    )
+  }
+}

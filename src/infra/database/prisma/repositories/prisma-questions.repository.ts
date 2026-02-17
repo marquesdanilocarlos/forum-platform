@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import QuestionsRepository from '@/domain/forum/application/repositories/questions-repository'
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
-import { PrismaQuestionMapper } from '@/infra/database/prisma/mappers/prisma-question-mapper'
+import { PrismaQuestionMapper } from '@/infra/database/prisma/mappers/prisma-question.mapper'
 import Question from '@/domain/forum/enterprise/entities/question'
 import Slug from '@/domain/forum/enterprise/entities/value-objects/slug'
 import PaginationParams from '@/core/types/pagination-params'
