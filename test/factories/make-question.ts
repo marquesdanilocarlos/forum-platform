@@ -9,12 +9,14 @@ export default function makeQuestion(
   override: Partial<QuestionProps> = {},
   id?: string,
 ): Question {
+  const title = override.title ?? faker.lorem.sentence()
+  const slug = Slug.createFromText(title)
   return Question.create(
     {
       authorId: new UniqueEntityId(),
-      title: faker.lorem.sentence(),
+      title,
       content: faker.lorem.text(),
-      slug: Slug.create('questao-importante'),
+      slug,
       ...override,
     },
     new UniqueEntityId(id),

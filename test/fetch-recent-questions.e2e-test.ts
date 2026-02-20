@@ -5,51 +5,46 @@ import { AppModule } from '@/infra/app.module'
 import request from 'supertest'
 import { hash } from 'bcryptjs'
 import { JwtService } from '@nestjs/jwt'
+import StudentPrismaFactory from './factories/student-prisma-factory'
+import QuestionPrismaFactory from './factories/question-prisma-factory'
+import { DatabaseModule } from '@/infra/database/database.module'
 
 describe('Listagem de perguntas E2E', () => {
   let app: INestApplication
-  let prisma: PrismaService
   let jwt: JwtService
+  let studentPrismaFactory: StudentPrismaFactory
+  let questionPrismaFactory: QuestionPrismaFactory
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [AppModule, DatabaseModule],
+      providers: [StudentPrismaFactory, QuestionPrismaFactory],
     }).compile()
 
     app = moduleRef.createNestApplication()
-    prisma = moduleRef.get(PrismaService)
     jwt = moduleRef.get(JwtService)
+    studentPrismaFactory = moduleRef.get(StudentPrismaFactory)
+    questionPrismaFactory = moduleRef.get(QuestionPrismaFactory)
     await app.init()
   })
 
   test('Deve listar perguntas', async () => {
-    const user = await prisma.user.create({
-      data: {
-        name: 'John Doe',
-        email: 'john.doe4@example.com',
-        password: await hash('123456', 8),
-      },
+    const user = await studentPrismaFactory.makePrismaStudent({
+      name: 'John Doe',
+      email: 'john.doe4@example.com',
+      password: await hash('123456', 8),
     })
 
-    const accessToken = jwt.sign({ sub: user.id })
+    const accessToken = jwt.sign({ sub: user.id.value })
 
-    await prisma.question.create({
-      data: {
-        title: 'Question-01',
-        slug: 'question-01',
-        content: 'conteudo-01',
+    const [question01, question02] = await Promise.all([
+      questionPrismaFactory.makePrismaQuestion({
         authorId: user.id,
-      },
-    })
-
-    await prisma.question.create({
-      data: {
-        title: 'Question-02',
-        slug: 'question-02',
-        content: 'conteudo-02',
+      }),
+      questionPrismaFactory.makePrismaQuestion({
         authorId: user.id,
-      },
-    })
+      }),
+    ])
 
     const response = await request(app.getHttpServer())
       .get('/questions')
@@ -59,8 +54,8 @@ describe('Listagem de perguntas E2E', () => {
     expect(response.statusCode).toBe(200)
     expect(response.body.questions).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ title: 'Question-01' }),
-        expect.objectContaining({ title: 'Question-02' }),
+        expect.objectContaining({ title: question01.title }),
+        expect.objectContaining({ title: question02.title }),
       ]),
     )
   })
