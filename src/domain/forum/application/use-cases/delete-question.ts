@@ -1,12 +1,14 @@
 import QuestionsRepository from '@/domain/forum/application/repositories/questions-repository'
 import { NotFoundError, UnauthorizedError } from '@/core/errors'
 import QuestionAttachmentsRepository from '@/domain/forum/application/repositories/question-attachments-repository'
+import { Injectable } from '@nestjs/common'
 
 type DeleteQuestionInput = {
   authorId: string
   questionId: string
 }
 
+@Injectable()
 export default class DeleteQuestion {
   constructor(
     private questionsRepository: QuestionsRepository,
