@@ -5,8 +5,10 @@ import QuestionAttachment from '@/domain/forum/enterprise/entities/question-atta
 import { PrismaQuestionAttachmentMapper } from '@/infra/database/prisma/mappers/prisma-question-attachment.mapper'
 
 @Injectable()
-export class PrismaQuestionAttachmentsRepository implements QuestionAttachmentsRepository {
-  constructor(private prisma: PrismaService) {}
+export class PrismaQuestionAttachmentsRepository extends QuestionAttachmentsRepository {
+  constructor(private prisma: PrismaService) {
+    super()
+  }
 
   async deleteManyByQuestionId(questionId: string): Promise<void> {
     await this.prisma.attachment.deleteMany({

@@ -2,7 +2,7 @@ import AnswerCommentsRepository from '@/domain/forum/application/repositories/an
 import AnswerComment from '@/domain/forum/enterprise/entities/answer-comment'
 import PaginationParams from '@/core/types/pagination-params'
 
-export default class InMemoryAnswerCommentsRepository implements AnswerCommentsRepository {
+export default class InMemoryAnswerCommentsRepository extends AnswerCommentsRepository {
   public comments: AnswerComment[] = []
   create(answerComment: AnswerComment): Promise<AnswerComment> {
     this.comments.push(answerComment)

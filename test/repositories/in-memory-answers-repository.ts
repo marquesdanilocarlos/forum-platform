@@ -3,7 +3,7 @@ import Answer from '@/domain/forum/enterprise/entities/answer'
 import PaginationParams from '@/core/types/pagination-params'
 import { DomainEvents } from '@/core/events/domain-events'
 
-export default class InMemoryAnswersRepository implements AnswersRepository {
+export default class InMemoryAnswersRepository extends AnswersRepository {
   public answers: Answer[] = []
   async findById(id: string): Promise<Answer | null> {
     const answer =

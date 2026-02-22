@@ -2,11 +2,11 @@ import QuestionCommentsRepository from '@/domain/forum/application/repositories/
 import QuestionComment from '@/domain/forum/enterprise/entities/question-comment'
 import PaginationParams from '@/core/types/pagination-params'
 
-export default class InMemoryQuestionCommentsRepository implements QuestionCommentsRepository {
+export default class InMemoryQuestionCommentsRepository extends QuestionCommentsRepository {
   public comments: QuestionComment[] = []
-  create(questionComment: QuestionComment): Promise<QuestionComment> {
+  async create(questionComment: QuestionComment): Promise<void> {
     this.comments.push(questionComment)
-    return Promise.resolve(questionComment)
+    return Promise.resolve()
   }
 
   delete(questionComment: QuestionComment): Promise<void> {

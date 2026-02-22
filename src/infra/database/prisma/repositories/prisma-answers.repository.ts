@@ -6,8 +6,10 @@ import { PrismaAnswerMapper } from '@/infra/database/prisma/mappers/prisma-answe
 import PaginationParams from '@/core/types/pagination-params'
 
 @Injectable()
-export class PrismaAnswersRepository implements AnswersRepository {
-  constructor(private prisma: PrismaService) {}
+export class PrismaAnswersRepository extends AnswersRepository {
+  constructor(private prisma: PrismaService) {
+    super()
+  }
 
   async create(answer: Answer): Promise<void> {
     const data = PrismaAnswerMapper.toPersistent(answer)

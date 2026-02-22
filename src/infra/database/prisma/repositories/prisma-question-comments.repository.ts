@@ -6,8 +6,10 @@ import { PrismaService } from '@/infra/database/prisma/prisma.service'
 import { PrismaQuestionCommentMapper } from '@/infra/database/prisma/mappers/prisma-question-comment.mapper'
 
 @Injectable()
-export class PrismaQuestionCommentsRepository implements QuestionCommentsRepository {
-  constructor(private prisma: PrismaService) {}
+export class PrismaQuestionCommentsRepository extends QuestionCommentsRepository {
+  constructor(private prisma: PrismaService) {
+    super()
+  }
 
   async create(questionComment: QuestionComment): Promise<void> {
     const data = PrismaQuestionCommentMapper.toPersistent(questionComment)

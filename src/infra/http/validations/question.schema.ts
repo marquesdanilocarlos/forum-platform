@@ -5,6 +5,7 @@ export const createQuestionSchema = z.object({
   content: z.string(),
 })
 export type CreateQuestionType = z.infer<typeof createQuestionSchema>
+export type EditQuestionType = z.infer<typeof createQuestionSchema>
 
 export const pageQueryParamSchema = z
   .string()

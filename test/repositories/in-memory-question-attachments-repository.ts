@@ -1,7 +1,7 @@
 import QuestionAttachmentsRepository from '@/domain/forum/application/repositories/question-attachments-repository'
 import QuestionAttachment from '@/domain/forum/enterprise/entities/question-attachment'
 
-export default class InMemoryQuestionAttachmentsRepository implements QuestionAttachmentsRepository {
+export default class InMemoryQuestionAttachmentsRepository extends QuestionAttachmentsRepository {
   public attachments: QuestionAttachment[] = []
 
   findManyByQuestionId(questionId: string): Promise<QuestionAttachment[]> {
