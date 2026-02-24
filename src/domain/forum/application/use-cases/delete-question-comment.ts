@@ -1,11 +1,13 @@
 import QuestionCommentsRepository from '@/domain/forum/application/repositories/question-comments-repository'
 import { NotFoundError, UnauthorizedError } from '@/core/errors'
+import { Injectable } from '@nestjs/common'
 
 type DeleteQuestionCommentInput = {
   authorId: string
   questionCommentId: string
 }
 
+@Injectable()
 export default class DeleteQuestionComment {
   constructor(private questionCommentsRepository: QuestionCommentsRepository) {}
 
