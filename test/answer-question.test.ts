@@ -1,14 +1,14 @@
-import QuestionAnswer from '@/domain/forum/application/use-cases/question-answer'
+import AnswerQuestion from '@/domain/forum/application/use-cases/answer-question'
 import InMemoryAnswersRepository from './repositories/in-memory-answers-repository'
 import UniqueEntityId from '@/core/entities/unique-entity-id'
 
 describe('Criacão de respostas', () => {
   let inMemoryAnswersRepository: InMemoryAnswersRepository
-  let sut: QuestionAnswer
+  let sut: AnswerQuestion
 
   beforeEach(() => {
     inMemoryAnswersRepository = new InMemoryAnswersRepository()
-    sut = new QuestionAnswer(inMemoryAnswersRepository)
+    sut = new AnswerQuestion(inMemoryAnswersRepository)
   })
 
   test('Deve responder uma pergunta', async () => {

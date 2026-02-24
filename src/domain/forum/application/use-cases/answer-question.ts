@@ -3,9 +3,10 @@ import AnswersRepository from '@/domain/forum/application/repositories/answers-r
 import UniqueEntityId from '@/core/entities/unique-entity-id'
 import AnswerAttachmentList from '@/domain/forum/enterprise/entities/answer-attachment-list'
 import AnswerAttachment from '@/domain/forum/enterprise/entities/answer-attachment'
+import { Injectable } from '@nestjs/common'
 
 type QuestionAnswerInput = {
-  instructorId: string
+  authorId: string
   questionId: string
   content: string
   attachmentsIds: string[]
@@ -15,14 +16,15 @@ type QuestionAnswerOutput = {
   answer: Answer
 }
 
-export default class QuestionAnswer {
+@Injectable()
+export default class AnswerQuestion {
   constructor(private answersRepository: AnswersRepository) {}
 
   async execute(input: QuestionAnswerInput): Promise<QuestionAnswerOutput> {
-    const { instructorId, questionId, content, attachmentsIds } = input
+    const { authorId, questionId, content, attachmentsIds } = input
 
     const answer: Answer = Answer.create({
-      authorId: new UniqueEntityId(instructorId),
+      authorId: new UniqueEntityId(authorId),
       questionId: new UniqueEntityId(questionId),
       content,
     })

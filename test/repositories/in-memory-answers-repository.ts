@@ -11,10 +11,9 @@ export default class InMemoryAnswersRepository extends AnswersRepository {
     return Promise.resolve(answer)
   }
 
-  async create(answer: Answer): Promise<Answer> {
+  async create(answer: Answer): Promise<void> {
     this.answers.push(answer)
     DomainEvents.dispatchEventsForAggregate(answer.id)
-    return Promise.resolve(answer)
   }
 
   async delete(answer: Answer): Promise<void> {
@@ -30,14 +29,13 @@ export default class InMemoryAnswersRepository extends AnswersRepository {
     return Promise.resolve()
   }
 
-  async save(answer: Answer): Promise<Answer> {
+  async save(answer: Answer): Promise<void> {
     const answerIndex = this.answers.findIndex(
       (item) => item.id.value === answer.id.value,
     )
 
     this.answers[answerIndex] = answer
     DomainEvents.dispatchEventsForAggregate(answer.id)
-    return Promise.resolve(this.answers[answerIndex])
   }
 
   findManyByQuestionId(
