@@ -5,3 +5,4 @@ export const createAnswerSchema = z.object({
 })
 
 export type CreateAnswerType = z.infer<typeof createAnswerSchema>
+export type EditAnswerType = z.infer<typeof createAnswerSchema>

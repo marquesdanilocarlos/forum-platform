@@ -1,11 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  HttpCode,
-  Injectable,
-  Param,
-} from '@nestjs/common'
+import { Controller, Delete, HttpCode, Injectable, Param } from '@nestjs/common'
 import { CurrentUser } from '@/infra/auth/current-user.decorator'
 import { TokenPayloadType } from '@/infra/http/validations/user.schema'
 import DeleteQuestion from '@/domain/forum/application/use-cases/delete-question'
