@@ -1,12 +1,14 @@
 import QuestionsRepository from '@/domain/forum/application/repositories/questions-repository'
 import AnswersRepository from '@/domain/forum/application/repositories/answers-repository'
 import { NotFoundError, UnauthorizedError } from '@/core/errors'
+import { Injectable } from '@nestjs/common'
 
 type ChooseBestQuestionAnswerInput = {
   answerId: string
   authorId: string
 }
 
+@Injectable()
 export default class ChooseBestQuestionAnswer {
   constructor(
     private questionsRepository: QuestionsRepository,
