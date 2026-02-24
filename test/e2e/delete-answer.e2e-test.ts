@@ -10,13 +10,13 @@ import { DatabaseModule } from '@/infra/database/database.module'
 import AnswerPrismaFactory from '../factories/answer-prisma-factory'
 import QuestionPrismaFactory from '../factories/question-prisma-factory'
 
-describe('Edição de respostas E2E', () => {
+describe('Deleção de respostas E2E', () => {
   let app: INestApplication
   let prisma: PrismaService
   let jwt: JwtService
   let studentPrismaFactory: StudentPrismaFactory
-  let questionPrismaFactory: QuestionPrismaFactory
   let answerPrismaFactory: AnswerPrismaFactory
+  let questionPrismaFactory: QuestionPrismaFactory
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -37,10 +37,10 @@ describe('Edição de respostas E2E', () => {
     await app.init()
   })
 
-  test('Deve editar uma resposta', async () => {
+  test('Deve deletar uma resposta', async () => {
     const user = await studentPrismaFactory.makePrismaStudent({
       name: 'John Doe',
-      email: 'john.doe356@example.com',
+      email: 'john.doe452@exmailx.com',
       password: await hash('123456', 8),
     })
 
@@ -55,21 +55,27 @@ describe('Edição de respostas E2E', () => {
       questionId: question.id,
     })
 
-    const response = await request(app.getHttpServer())
-      .put(`/answers/${answer.id.value}`)
-      .set('Authorization', `Bearer ${accessToken}`)
-      .send({
-        content: 'Resposta atualizada',
-      })
-
-    expect(response.statusCode).toBe(204)
-
-    const answerOnDatabase = await prisma.answer.findFirst({
+    const existentAnswer = await prisma.answer.findFirst({
       where: {
-        content: 'Resposta atualizada',
+        id: answer.id.value,
       },
     })
 
-    expect(answerOnDatabase).toBeTruthy()
+    expect(existentAnswer).toBeTruthy()
+
+    const response = await request(app.getHttpServer())
+      .delete(`/answers/${answer.id.value}`)
+      .set('Authorization', `Bearer ${accessToken}`)
+      .send()
+
+    expect(response.statusCode).toBe(204)
+
+    const deletedAnswer = await prisma.answer.findFirst({
+      where: {
+        id: answer.id.value,
+      },
+    })
+
+    expect(deletedAnswer).toBeNull()
   })
 })
