@@ -5,7 +5,7 @@ import { AppModule } from '@/infra/app.module'
 import request from 'supertest'
 import { hash } from 'bcryptjs'
 import { JwtService } from '@nestjs/jwt'
-import StudentPrismaFactory from './factories/student-prisma-factory'
+import StudentPrismaFactory from '../factories/student-prisma-factory'
 import { DatabaseModule } from '@/infra/database/database.module'
 
 describe('Criação de perguntas E2E', () => {

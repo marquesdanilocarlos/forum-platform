@@ -4,9 +4,9 @@ import PaginationParams from '@/core/types/pagination-params'
 
 export default class InMemoryAnswerCommentsRepository extends AnswerCommentsRepository {
   public comments: AnswerComment[] = []
-  create(answerComment: AnswerComment): Promise<AnswerComment> {
+  create(answerComment: AnswerComment): Promise<void> {
     this.comments.push(answerComment)
-    return Promise.resolve(answerComment)
+    return Promise.resolve()
   }
 
   delete(answerComment: AnswerComment): Promise<void> {

@@ -5,12 +5,13 @@ import { AppModule } from '@/infra/app.module'
 import request from 'supertest'
 import { hash } from 'bcryptjs'
 import { JwtService } from '@nestjs/jwt'
+import StudentPrismaFactory from '../factories/student-prisma-factory'
 import { DatabaseModule } from '@/infra/database/database.module'
-import StudentPrismaFactory from './factories/student-prisma-factory'
-import QuestionPrismaFactory from './factories/question-prisma-factory'
+import QuestionPrismaFactory from '../factories/question-prisma-factory'
 
-describe('Listagem de perguntas E2E', () => {
+describe('Criação de respostas E2E', () => {
   let app: INestApplication
+  let prisma: PrismaService
   let jwt: JwtService
   let studentPrismaFactory: StudentPrismaFactory
   let questionPrismaFactory: QuestionPrismaFactory
@@ -22,17 +23,17 @@ describe('Listagem de perguntas E2E', () => {
     }).compile()
 
     app = moduleRef.createNestApplication()
+    prisma = moduleRef.get(PrismaService)
     jwt = moduleRef.get(JwtService)
     studentPrismaFactory = moduleRef.get(StudentPrismaFactory)
     questionPrismaFactory = moduleRef.get(QuestionPrismaFactory)
-
     await app.init()
   })
 
-  test('Deve buscar pergunta pelo slug', async () => {
+  test('Deve responder pergunta', async () => {
     const user = await studentPrismaFactory.makePrismaStudent({
       name: 'John Doe',
-      email: 'john.doe.pergunta.slug@example.com',
+      email: 'john.doe356@example.com',
       password: await hash('123456', 8),
     })
 
@@ -43,13 +44,20 @@ describe('Listagem de perguntas E2E', () => {
     })
 
     const response = await request(app.getHttpServer())
-      .get(`/questions/${question.slug.value}`)
+      .post(`/questions/${question.id.value}/answers`)
       .set('Authorization', `Bearer ${accessToken}`)
-      .send()
+      .send({
+        content: 'Nova resposta para uma pergunta',
+      })
 
-    expect(response.statusCode).toBe(200)
-    expect(response.body.question).toEqual(
-      expect.objectContaining({ title: question.title }),
-    )
+    expect(response.statusCode).toBe(201)
+
+    const answerOnDatabase = await prisma.answer.findFirst({
+      where: {
+        content: 'Nova resposta para uma pergunta',
+      },
+    })
+
+    expect(answerOnDatabase).toBeTruthy()
   })
 })

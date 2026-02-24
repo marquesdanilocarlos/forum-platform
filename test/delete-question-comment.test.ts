@@ -20,12 +20,11 @@ describe('Deleção de comentário da pergunta', () => {
       { authorId: new UniqueEntityId('author-sinistro') },
       'to-delete-question-comment',
     )
-    const questionComment =
-      await inMemoryQuestionCommentsRepository.create(newQuestionComment)
+    await inMemoryQuestionCommentsRepository.create(newQuestionComment)
 
     await sut.execute({
-      authorId: questionComment.authorId.value,
-      questionCommentId: questionComment.id.value,
+      authorId: 'author-sinistro',
+      questionCommentId: 'to-delete-question-comment',
     })
     expect(inMemoryQuestionCommentsRepository.comments).toHaveLength(0)
   })
@@ -35,13 +34,13 @@ describe('Deleção de comentário da pergunta', () => {
       { authorId: new UniqueEntityId('author-sinistro') },
       'to-delete-question-comment',
     )
-    const questionComment =
-      await inMemoryQuestionCommentsRepository.create(newQuestionComment)
+
+    await inMemoryQuestionCommentsRepository.create(newQuestionComment)
 
     expect(async () => {
       await sut.execute({
         authorId: 'outro-autor',
-        questionCommentId: questionComment.id.value,
+        questionCommentId: 'to-delete-question-comment',
       })
     }).rejects.toBeInstanceOf(UnauthorizedError)
   })

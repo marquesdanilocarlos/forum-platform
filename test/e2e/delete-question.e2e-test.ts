@@ -5,11 +5,11 @@ import { AppModule } from '@/infra/app.module'
 import request from 'supertest'
 import { hash } from 'bcryptjs'
 import { JwtService } from '@nestjs/jwt'
-import StudentPrismaFactory from './factories/student-prisma-factory'
+import StudentPrismaFactory from '../factories/student-prisma-factory'
 import { DatabaseModule } from '@/infra/database/database.module'
-import QuestionPrismaFactory from './factories/question-prisma-factory'
+import QuestionPrismaFactory from '../factories/question-prisma-factory'
 
-describe('Criação de respostas E2E', () => {
+describe('Deleção de perguntas E2E', () => {
   let app: INestApplication
   let prisma: PrismaService
   let jwt: JwtService
@@ -30,10 +30,10 @@ describe('Criação de respostas E2E', () => {
     await app.init()
   })
 
-  test('Deve responder pergunta', async () => {
+  test('Deve deletar uma pergunta', async () => {
     const user = await studentPrismaFactory.makePrismaStudent({
       name: 'John Doe',
-      email: 'john.doe356@example.com',
+      email: 'john.doe984@example.com',
       password: await hash('123456', 8),
     })
 
@@ -43,21 +43,27 @@ describe('Criação de respostas E2E', () => {
       authorId: user.id,
     })
 
-    const response = await request(app.getHttpServer())
-      .post(`/questions/${question.id.value}/answers`)
-      .set('Authorization', `Bearer ${accessToken}`)
-      .send({
-        content: 'Nova resposta para uma pergunta',
-      })
-
-    expect(response.statusCode).toBe(201)
-
-    const answerOnDatabase = await prisma.answer.findFirst({
+    const existentQuestion = await prisma.question.findFirst({
       where: {
-        content: 'Nova resposta para uma pergunta',
+        id: question.id.value,
       },
     })
 
-    expect(answerOnDatabase).toBeTruthy()
+    expect(existentQuestion).toBeTruthy()
+
+    const response = await request(app.getHttpServer())
+      .delete(`/questions/${question.id.value}`)
+      .set('Authorization', `Bearer ${accessToken}`)
+      .send()
+
+    expect(response.statusCode).toBe(204)
+
+    const deletedQuestion = await prisma.question.findFirst({
+      where: {
+        id: question.id.value,
+      },
+    })
+
+    expect(deletedQuestion).toBeNull()
   })
 })

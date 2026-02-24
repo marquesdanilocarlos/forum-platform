@@ -27,25 +27,25 @@ describe('Deleção de resposta', () => {
       { authorId: new UniqueEntityId('author-sinistro') },
       new UniqueEntityId('to-delete-answer'),
     )
-    const answer = await inMemoryAnswersRepository.create(newAnswer)
+    await inMemoryAnswersRepository.create(newAnswer)
 
     inMemoryAnswerAttachmentsRepository.attachments.push(
       makeAnswerAttachment({
-        answerId: answer.id,
+        answerId: new UniqueEntityId('to-delete-answer'),
         attachmentId: new UniqueEntityId('1'),
       }),
     )
 
     inMemoryAnswerAttachmentsRepository.attachments.push(
       makeAnswerAttachment({
-        answerId: answer.id,
+        answerId: new UniqueEntityId('to-delete-answer'),
         attachmentId: new UniqueEntityId('2'),
       }),
     )
 
     await sut.execute({
-      authorId: answer.authorId.value,
-      answerId: answer.id.value,
+      authorId: 'author-sinistro',
+      answerId: 'to-delete-answer',
     })
 
     expect(inMemoryAnswersRepository.answers).toHaveLength(0)
@@ -57,12 +57,12 @@ describe('Deleção de resposta', () => {
       { authorId: new UniqueEntityId('autor-sinistro') },
       new UniqueEntityId('to-delete-answer'),
     )
-    const answer = await inMemoryAnswersRepository.create(newAnswer)
+    await inMemoryAnswersRepository.create(newAnswer)
 
     expect(async () => {
       await sut.execute({
         authorId: 'outro-autor',
-        answerId: answer.id.value,
+        answerId: 'to-delete-answer',
       })
     }).rejects.toBeInstanceOf(UnauthorizedError)
   })

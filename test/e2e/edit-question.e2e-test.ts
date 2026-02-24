@@ -5,11 +5,11 @@ import { AppModule } from '@/infra/app.module'
 import request from 'supertest'
 import { hash } from 'bcryptjs'
 import { JwtService } from '@nestjs/jwt'
-import StudentPrismaFactory from './factories/student-prisma-factory'
+import StudentPrismaFactory from '../factories/student-prisma-factory'
 import { DatabaseModule } from '@/infra/database/database.module'
-import QuestionPrismaFactory from './factories/question-prisma-factory'
+import QuestionPrismaFactory from '../factories/question-prisma-factory'
 
-describe('Deleção de perguntas E2E', () => {
+describe('Edição de perguntas E2E', () => {
   let app: INestApplication
   let prisma: PrismaService
   let jwt: JwtService
@@ -30,10 +30,10 @@ describe('Deleção de perguntas E2E', () => {
     await app.init()
   })
 
-  test('Deve deletar uma pergunta', async () => {
+  test('Deve editar uma pergunta', async () => {
     const user = await studentPrismaFactory.makePrismaStudent({
       name: 'John Doe',
-      email: 'john.doe984@example.com',
+      email: 'john.doe132@example.com',
       password: await hash('123456', 8),
     })
 
@@ -43,27 +43,22 @@ describe('Deleção de perguntas E2E', () => {
       authorId: user.id,
     })
 
-    const existentQuestion = await prisma.question.findFirst({
-      where: {
-        id: question.id.value,
-      },
-    })
-
-    expect(existentQuestion).toBeTruthy()
-
     const response = await request(app.getHttpServer())
-      .delete(`/questions/${question.id.value}`)
+      .put(`/questions/${question.id.value}`)
       .set('Authorization', `Bearer ${accessToken}`)
-      .send()
+      .send({
+        title: 'Pergunta atualizada',
+        content: 'Conteúdo da pergunta atualizado',
+      })
 
     expect(response.statusCode).toBe(204)
 
-    const deletedQuestion = await prisma.question.findFirst({
+    const updatedQuestion = await prisma.question.findFirst({
       where: {
-        id: question.id.value,
+        title: 'Pergunta atualizada',
       },
     })
 
-    expect(deletedQuestion).toBeNull()
+    expect(updatedQuestion).toBeTruthy()
   })
 })

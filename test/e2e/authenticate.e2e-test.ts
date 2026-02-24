@@ -3,7 +3,7 @@ import { Test } from '@nestjs/testing'
 import { INestApplication } from '@nestjs/common'
 import { AppModule } from '@/infra/app.module'
 import { hash } from 'bcryptjs'
-import StudentPrismaFactory from './factories/student-prisma-factory'
+import StudentPrismaFactory from '../factories/student-prisma-factory'
 import { DatabaseModule } from '@/infra/database/database.module'
 
 describe('Autenticação (E2E)', () => {

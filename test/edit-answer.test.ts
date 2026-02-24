@@ -27,11 +27,11 @@ describe('Edição de resposta', () => {
       new UniqueEntityId('to-edit-answer'),
     )
 
-    const answer = await inMemoryAnswersRepository.create(newAnswer)
+    await inMemoryAnswersRepository.create(newAnswer)
 
     await sut.execute({
-      authorId: answer.authorId.value,
-      answerId: answer.id.value,
+      authorId: 'author-sinistro',
+      answerId: 'to-edit-answer',
       content: 'Novo conteúdo de resposta',
       attachmentsIds: ['1', '3'],
     })
@@ -57,12 +57,13 @@ describe('Edição de resposta', () => {
       { authorId: new UniqueEntityId('autor-sinistro') },
       new UniqueEntityId('to-edit-answer'),
     )
-    const answer = await inMemoryAnswersRepository.create(newAnswer)
+
+    await inMemoryAnswersRepository.create(newAnswer)
 
     expect(async () => {
       await sut.execute({
         authorId: 'outro-autor',
-        answerId: answer.id.value,
+        answerId: 'to-edit-answer',
         content: 'Novo conteúdo de resposta',
         attachmentsIds: [],
       })
