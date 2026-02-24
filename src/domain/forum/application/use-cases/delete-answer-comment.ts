@@ -1,11 +1,13 @@
 import AnswerCommentsRepository from '@/domain/forum/application/repositories/answer-comments-repository'
 import { NotFoundError, UnauthorizedError } from '@/core/errors'
+import { Injectable } from '@nestjs/common'
 
 type DeleteAnswerCommentInput = {
   authorId: string
   answerCommentId: string
 }
 
+@Injectable()
 export default class DeleteAnswerComment {
   constructor(private answerCommentsRepository: AnswerCommentsRepository) {}
 
