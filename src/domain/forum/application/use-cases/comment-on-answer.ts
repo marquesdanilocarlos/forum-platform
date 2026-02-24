@@ -3,6 +3,7 @@ import AnswerCommentsRepository from '@/domain/forum/application/repositories/an
 import AnswerComment from '@/domain/forum/enterprise/entities/answer-comment'
 import UniqueEntityId from '@/core/entities/unique-entity-id'
 import { NotFoundError } from '@/core/errors'
+import { Injectable } from '@nestjs/common'
 
 export type CommentOnAnswerInput = {
   answerId: string
@@ -14,6 +15,7 @@ export type CommentOnAnswerOutput = {
   comment: AnswerComment
 }
 
+@Injectable()
 export default class CommentOnAnswer {
   constructor(
     private answersRepository: AnswersRepository,
