@@ -1,5 +1,6 @@
 import AnswerComment from '@/domain/forum/enterprise/entities/answer-comment'
 import AnswerCommentsRepository from '@/domain/forum/application/repositories/answer-comments-repository'
+import { Injectable } from '@nestjs/common'
 
 type FetchAnswerCommentsInput = {
   answerId: string
@@ -10,6 +11,7 @@ type FetchAnswerCommentsOutput = {
   answerComments: AnswerComment[]
 }
 
+@Injectable()
 export default class FetchAnswerComments {
   constructor(private answerCommentsRepository: AnswerCommentsRepository) {}
 
