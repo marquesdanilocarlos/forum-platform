@@ -5,12 +5,14 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify'
 import EnvService from '@/infra/env/env-service'
+import multipart from '@fastify/multipart'
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     new FastifyAdapter(),
   )
+  await app.register(multipart)
   app.enableShutdownHooks()
   const envService: EnvService = app.get(EnvService)
   const port = envService.get('PORT')
