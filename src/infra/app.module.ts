@@ -6,6 +6,7 @@ import { JwtStrategy } from './auth/jwt.strategy'
 import { HttpModule } from '@/infra/http/http.module'
 import { CryptographyModule } from './criptography/cryptography.module'
 import { EnvModule } from './env/env.module'
+import { StorageModule } from './storage/storage.module'
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { EnvModule } from './env/env.module'
     AuthModule,
     HttpModule,
     CryptographyModule,
+    StorageModule,
   ],
   providers: [JwtStrategy],
 })
