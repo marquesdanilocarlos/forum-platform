@@ -7,9 +7,13 @@ import {
 } from '@nestjs/common'
 import { FileInterceptor, File } from '@nest-lab/fastify-multer'
 import { FastifyRequest } from 'fastify'
+import UploadAndCreateAttachment from '@/domain/forum/application/use-cases/upload-and-create-attachment'
+import InvalidAttachmentTypeError from '@/domain/forum/application/use-cases/errors/invalid-attachment-type.error'
 
 @Controller('/attachments')
 export class UploadAttachmentController {
+  constructor(private uploadAndCreateAttachment: UploadAndCreateAttachment) {}
+
   @Post()
   @UseInterceptors(
     FileInterceptor('file', {
@@ -32,11 +36,21 @@ export class UploadAttachmentController {
       },
     }),
   )
-  upload(@UploadedFile() file: File) {
-    return {
-      originalname: file.originalname,
-      size: file.size,
-      mimetype: file.mimetype,
+  async upload(@UploadedFile() file: File) {
+    try {
+      const { attachment } = await this.uploadAndCreateAttachment.execute({
+        fileName: file.originalname,
+        fileType: file.mimetype,
+        fileContent: file.buffer ?? Buffer.from(''),
+      })
+
+      return { attachmentId: attachment.id.value }
+    } catch (error: unknown) {
+      if (error instanceof InvalidAttachmentTypeError) {
+        throw new BadRequestException(error.message)
+      }
+
+      throw error
     }
   }
 }

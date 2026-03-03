@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common'
 import Uploader from '@/domain/forum/application/storage/uploader'
-import TebiStorage from '@/infra/storage/tebi-storage'
+import R2Storage from '@/infra/storage/r2-storage'
 import { EnvModule } from '@/infra/env/env.module'
 
 @Module({
   providers: [
     {
       provide: Uploader,
-      useClass: TebiStorage,
+      useClass: R2Storage,
     },
   ],
   exports: [Uploader],
