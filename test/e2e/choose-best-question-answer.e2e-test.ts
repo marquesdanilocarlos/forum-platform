@@ -59,7 +59,6 @@ describe('Seleção da melhor resposta E2E', () => {
       .patch(`/answers/${answer.id.value}/choose-as-best`)
       .set('Authorization', `Bearer ${accessToken}`)
       .send()
-    console.log(response)
 
     expect(response.statusCode).toBe(204)
 

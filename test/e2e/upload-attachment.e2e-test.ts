@@ -53,12 +53,11 @@ describe('Upload attachment E2E', () => {
       'file',
       await readFile(join(process.cwd(), 'test/e2e/danilo.jpg')),
       {
-        contentType: 'application/json',
         filename: 'danilo.jpg',
       },
     )
 
-    const res = await app
+    const response = await app
       .getHttpAdapter()
       .getInstance()
       .inject({
@@ -71,6 +70,6 @@ describe('Upload attachment E2E', () => {
         payload: form,
       })
 
-    expect(res.statusCode).toBe(201)
+    expect(response.statusCode).toBe(201)
   })
 })
