@@ -1,4 +1,4 @@
-type UploadParams = {
+export type UploadParams = {
   fileName: string
   fileType: string
   fileContent: Buffer
