@@ -3,6 +3,7 @@ import { z } from 'zod'
 export const createQuestionSchema = z.object({
   title: z.string(),
   content: z.string(),
+  attachments: z.array(z.uuid()),
 })
 export type CreateQuestionType = z.infer<typeof createQuestionSchema>
 export type EditQuestionType = z.infer<typeof createQuestionSchema>

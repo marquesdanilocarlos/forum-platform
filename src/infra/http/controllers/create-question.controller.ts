@@ -17,13 +17,13 @@ export class CreateQuestionController {
     @Body(new ZodValidationPipe(createQuestionSchema)) body: CreateQuestionType,
     @CurrentUser() user: TokenPayloadType,
   ) {
-    const { title, content } = body
+    const { title, content, attachments } = body
 
     await this.createQuestion.execute({
       authorId: user.sub,
       title,
       content,
-      attachmentsIds: [],
+      attachmentsIds: attachments,
     })
   }
 }

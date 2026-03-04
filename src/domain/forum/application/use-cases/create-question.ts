@@ -3,7 +3,7 @@ import Question from '@/domain/forum/enterprise/entities/question'
 import UniqueEntityId from '@/core/entities/unique-entity-id'
 import QuestionAttachment from '@/domain/forum/enterprise/entities/question-attachment'
 import QuestionAttachmentList from '@/domain/forum/enterprise/entities/question-attachment-list'
-import { Inject, Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 
 export type CreateQuestionInput = {
   authorId: string
@@ -30,10 +30,13 @@ export default class CreateQuestion {
     })
 
     const questionAttachments = attachmentsIds.map((attachmentId) => {
-      return QuestionAttachment.create({
-        attachmentId: new UniqueEntityId(attachmentId),
-        questionId: question.id,
-      })
+      return QuestionAttachment.create(
+        {
+          attachmentId: new UniqueEntityId(attachmentId),
+          questionId: question.id,
+        },
+        new UniqueEntityId(attachmentId),
+      )
     })
 
     question.attachments = new QuestionAttachmentList(questionAttachments)

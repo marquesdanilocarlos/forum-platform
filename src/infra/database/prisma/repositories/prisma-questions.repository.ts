@@ -5,10 +5,14 @@ import { PrismaQuestionMapper } from '@/infra/database/prisma/mappers/prisma-que
 import Question from '@/domain/forum/enterprise/entities/question'
 import Slug from '@/domain/forum/enterprise/entities/value-objects/slug'
 import PaginationParams from '@/core/types/pagination-params'
+import QuestionAttachmentsRepository from '@/domain/forum/application/repositories/question-attachments-repository'
 
 @Injectable()
 export class PrismaQuestionsRepository implements QuestionsRepository {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private questionAttachmentsRepository: QuestionAttachmentsRepository,
+  ) {}
 
   async findById(id: string): Promise<Question | null> {
     const question = await this.prisma.question.findUnique({
@@ -27,6 +31,10 @@ export class PrismaQuestionsRepository implements QuestionsRepository {
   async create(question: Question): Promise<Question> {
     const data = PrismaQuestionMapper.toPersistent(question)
     await this.prisma.question.create({ data })
+
+    await this.questionAttachmentsRepository.createMany(
+      question.attachments.getItems(),
+    )
 
     return question
   }
@@ -67,12 +75,21 @@ export class PrismaQuestionsRepository implements QuestionsRepository {
 
   async save(question: Question): Promise<Question> {
     const data = PrismaQuestionMapper.toPersistent(question)
-    await this.prisma.question.update({
-      where: {
-        id: data.id,
-      },
-      data,
-    })
+
+    await Promise.all([
+      this.prisma.question.update({
+        where: {
+          id: data.id,
+        },
+        data,
+      }),
+      this.questionAttachmentsRepository.createMany(
+        question.attachments.getNewItems(),
+      ),
+      this.questionAttachmentsRepository.deleteMany(
+        question.attachments.getRemovedItems(),
+      ),
+    ])
 
     return question
   }

@@ -31,4 +31,33 @@ export class PrismaQuestionAttachmentsRepository extends QuestionAttachmentsRepo
       PrismaQuestionAttachmentMapper.toDomain(attachment),
     )
   }
+
+  async createMany(attachments: QuestionAttachment[]): Promise<void> {
+    if (!attachments.length) {
+      return
+    }
+
+    const data =
+      PrismaQuestionAttachmentMapper.toPersistentUpdateMany(attachments)
+
+    await this.prisma.attachment.updateMany(data)
+  }
+
+  async deleteMany(attachments: QuestionAttachment[]): Promise<void> {
+    if (!attachments.length) {
+      return
+    }
+
+    const attachmentIds = attachments.map((attachment) => {
+      return attachment.id.value
+    })
+
+    await this.prisma.attachment.deleteMany({
+      where: {
+        id: {
+          in: attachmentIds,
+        },
+      },
+    })
+  }
 }
