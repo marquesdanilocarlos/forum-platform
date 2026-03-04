@@ -49,10 +49,13 @@ export default class EditQuestion {
     )
 
     const attachments = attachmentsIds.map((attachmentId) => {
-      return QuestionAttachment.create({
-        attachmentId: new UniqueEntityId(attachmentId),
-        questionId: question.id,
-      })
+      return QuestionAttachment.create(
+        {
+          attachmentId: new UniqueEntityId(attachmentId),
+          questionId: question.id,
+        },
+        new UniqueEntityId(attachmentId),
+      )
     })
 
     existentAttachments.update(attachments)
