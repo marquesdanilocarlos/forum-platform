@@ -4,7 +4,9 @@ import QuestionAttachment from '@/domain/forum/enterprise/entities/question-atta
 export default class InMemoryQuestionAttachmentsRepository extends QuestionAttachmentsRepository {
   public attachments: QuestionAttachment[] = []
 
-  findManyByQuestionId(questionId: string): Promise<QuestionAttachment[]> {
+  async findManyByQuestionId(
+    questionId: string,
+  ): Promise<QuestionAttachment[]> {
     const questionAttachments = this.attachments.filter(
       (comment) => comment.questionId.value === questionId,
     )
@@ -12,10 +14,19 @@ export default class InMemoryQuestionAttachmentsRepository extends QuestionAttac
     return Promise.resolve(questionAttachments)
   }
 
-  deleteManyByQuestionId(questionId: string): Promise<void> {
+  async deleteManyByQuestionId(questionId: string): Promise<void> {
     this.attachments = this.attachments.filter(
       (comment) => comment.questionId.value !== questionId,
     )
-    return Promise.resolve(undefined)
+  }
+
+  async createMany(attachments: QuestionAttachment[]): Promise<void> {
+    this.attachments.push(...attachments)
+  }
+
+  async deleteMany(attachments: QuestionAttachment[]): Promise<void> {
+    this.attachments = this.attachments.filter((item) => {
+      return !attachments.some((attachment) => attachment.equals(item))
+    })
   }
 }

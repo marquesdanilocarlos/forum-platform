@@ -3,13 +3,19 @@ import CreateQuestion, {
 } from '@/domain/forum/application/use-cases/create-question'
 import InMemoryQuestionsRepository from './repositories/in-memory-questions-repository'
 import UniqueEntityId from '@/core/entities/unique-entity-id'
+import InMemoryQuestionAttachmentsRepository from './repositories/in-memory-question-attachments-repository'
 
 describe('Teste de criação de pergunta', () => {
   let inMemoryQuestionsRepository: InMemoryQuestionsRepository
+  let inMemoryQuestionAttachmentsRepository: InMemoryQuestionAttachmentsRepository
   let sut: CreateQuestion
 
   beforeEach(async () => {
-    inMemoryQuestionsRepository = new InMemoryQuestionsRepository()
+    inMemoryQuestionAttachmentsRepository =
+      new InMemoryQuestionAttachmentsRepository()
+    inMemoryQuestionsRepository = new InMemoryQuestionsRepository(
+      inMemoryQuestionAttachmentsRepository,
+    )
     sut = new CreateQuestion(inMemoryQuestionsRepository)
   })
 
@@ -32,5 +38,27 @@ describe('Teste de criação de pergunta', () => {
       expect.objectContaining({ attachmentId: new UniqueEntityId('1') }),
       expect.objectContaining({ attachmentId: new UniqueEntityId('2') }),
     ])
+  })
+
+  it('Deve persistir os anexos ao criar uma nova pergunta', async () => {
+    const newQuestionData: CreateQuestionInput = {
+      authorId: '1',
+      title: 'Nova Pergunta',
+      content: 'Como funciona isso',
+      attachmentsIds: ['1', '2'],
+    }
+    const { question } = await sut.execute(newQuestionData)
+    expect(question.id).toBeTruthy()
+    expect(inMemoryQuestionAttachmentsRepository.attachments).toHaveLength(2)
+    expect(inMemoryQuestionAttachmentsRepository.attachments).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          attachmentId: new UniqueEntityId('1'),
+        }),
+        expect.objectContaining({
+          attachmentId: new UniqueEntityId('2'),
+        }),
+      ]),
+    )
   })
 })

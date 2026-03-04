@@ -13,9 +13,11 @@ describe('Edição de pergunta', () => {
   let sut: EditQuestion
 
   beforeEach(() => {
-    inMemoryQuestionsRepository = new InMemoryQuestionsRepository()
     inMemoryQuestionAttachmentsRepository =
       new InMemoryQuestionAttachmentsRepository()
+    inMemoryQuestionsRepository = new InMemoryQuestionsRepository(
+      inMemoryQuestionAttachmentsRepository,
+    )
     sut = new EditQuestion(
       inMemoryQuestionsRepository,
       inMemoryQuestionAttachmentsRepository,
@@ -82,5 +84,48 @@ describe('Edição de pergunta', () => {
         attachmentsIds: [],
       })
     }).rejects.toBeInstanceOf(UnauthorizedError)
+  })
+
+  it('Deve sincronizar anexos novos e removidos ao editar uma pergunta', async () => {
+    const newQuestion: Question = makeQuestion(
+      { authorId: new UniqueEntityId('author-sinistro') },
+      'to-delete-question',
+    )
+    const question = await inMemoryQuestionsRepository.create(newQuestion)
+
+    inMemoryQuestionAttachmentsRepository.attachments.push(
+      makeQuestionAttachment({
+        questionId: question.id,
+        attachmentId: new UniqueEntityId('1'),
+      }),
+    )
+
+    inMemoryQuestionAttachmentsRepository.attachments.push(
+      makeQuestionAttachment({
+        questionId: question.id,
+        attachmentId: new UniqueEntityId('2'),
+      }),
+    )
+
+    const result = await sut.execute({
+      authorId: question.authorId.value,
+      questionId: question.id.value,
+      title: 'Novo título',
+      content: 'Novo Conteúdo',
+      attachmentsIds: ['1', '3'],
+    })
+
+    expect(result.question.id).toBeTruthy()
+    expect(inMemoryQuestionAttachmentsRepository.attachments).toHaveLength(2)
+    expect(inMemoryQuestionAttachmentsRepository.attachments).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          attachmentId: new UniqueEntityId('1'),
+        }),
+        expect.objectContaining({
+          attachmentId: new UniqueEntityId('3'),
+        }),
+      ]),
+    )
   })
 })

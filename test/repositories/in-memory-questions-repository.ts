@@ -3,9 +3,14 @@ import Question from '@/domain/forum/enterprise/entities/question'
 import Slug from '@/domain/forum/enterprise/entities/value-objects/slug'
 import PaginationParams from '@/core/types/pagination-params'
 import { DomainEvents } from '@/core/events/domain-events'
+import QuestionAttachmentsRepository from '@/domain/forum/application/repositories/question-attachments-repository'
 
 export default class InMemoryQuestionsRepository implements QuestionsRepository {
   public questions: Question[] = []
+
+  constructor(
+    private questionAttachmentsRepository: QuestionAttachmentsRepository,
+  ) {}
 
   async findById(id: string): Promise<Question | null> {
     const question =
@@ -24,6 +29,11 @@ export default class InMemoryQuestionsRepository implements QuestionsRepository 
 
   async create(question: Question): Promise<Question> {
     this.questions.push(question)
+
+    await this.questionAttachmentsRepository.createMany(
+      question.attachments.getItems(),
+    )
+
     DomainEvents.dispatchEventsForAggregate(question.id)
     return Promise.resolve(question)
   }
@@ -35,12 +45,21 @@ export default class InMemoryQuestionsRepository implements QuestionsRepository 
     return Promise.resolve(question)
   }
 
-  save(question: Question): Promise<Question> {
+  async save(question: Question): Promise<Question> {
     const questionIndex = this.questions.findIndex(
       (item) => item.id.value === question.id.value,
     )
 
     this.questions[questionIndex] = question
+
+    await this.questionAttachmentsRepository.createMany(
+      question.attachments.getNewItems(),
+    )
+
+    await this.questionAttachmentsRepository.deleteMany(
+      question.attachments.getRemovedItems(),
+    )
+
     DomainEvents.dispatchEventsForAggregate(question.id)
     return Promise.resolve(this.questions[questionIndex])
   }

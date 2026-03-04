@@ -13,9 +13,11 @@ describe('Deleção de pergunta', () => {
   let sut: DeleteQuestion
 
   beforeEach(() => {
-    inMemoryQuestionsRepository = new InMemoryQuestionsRepository()
     inMemoryQuestionAttachmentsRepository =
       new InMemoryQuestionAttachmentsRepository()
+    inMemoryQuestionsRepository = new InMemoryQuestionsRepository(
+      inMemoryQuestionAttachmentsRepository,
+    )
     sut = new DeleteQuestion(
       inMemoryQuestionsRepository,
       inMemoryQuestionAttachmentsRepository,
