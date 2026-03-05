@@ -13,9 +13,11 @@ describe('Deleção de resposta', () => {
   let sut: DeleteAnswer
 
   beforeEach(() => {
-    inMemoryAnswersRepository = new InMemoryAnswersRepository()
     inMemoryAnswerAttachmentsRepository =
       new InMemoryAnswerAttachmentsRepository()
+    inMemoryAnswersRepository = new InMemoryAnswersRepository(
+      inMemoryAnswerAttachmentsRepository,
+    )
     sut = new DeleteAnswer(
       inMemoryAnswersRepository,
       inMemoryAnswerAttachmentsRepository,

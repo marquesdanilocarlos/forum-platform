@@ -1,4 +1,6 @@
-import AnswerQuestion from '@/domain/forum/application/use-cases/answer-question'
+import AnswerQuestion, {
+  QuestionAnswerInput,
+} from '@/domain/forum/application/use-cases/answer-question'
 import InMemoryAnswersRepository from './repositories/in-memory-answers-repository'
 import InMemoryAnswerAttachmentsRepository from './repositories/in-memory-answer-attachments-repository'
 import UniqueEntityId from '@/core/entities/unique-entity-id'
@@ -37,6 +39,28 @@ describe('Criacão de respostas', () => {
         expect.objectContaining({ attachmentId: new UniqueEntityId('1') }),
         expect.objectContaining({ attachmentId: new UniqueEntityId('2') }),
       ],
+    )
+  })
+
+  it('Deve persistir os anexos ao criar uma nova resposta', async () => {
+    const newAnswerData: QuestionAnswerInput = {
+      authorId: '1',
+      questionId: '1',
+      content: 'Como funciona isso',
+      attachmentsIds: ['1', '2'],
+    }
+    const { answer } = await sut.execute(newAnswerData)
+    expect(answer.id).toBeTruthy()
+    expect(inMemoryAnswerAttachmentsRepository.attachments).toHaveLength(2)
+    expect(inMemoryAnswerAttachmentsRepository.attachments).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          attachmentId: new UniqueEntityId('1'),
+        }),
+        expect.objectContaining({
+          attachmentId: new UniqueEntityId('2'),
+        }),
+      ]),
     )
   })
 })

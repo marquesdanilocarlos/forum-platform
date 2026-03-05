@@ -5,7 +5,7 @@ import AnswerAttachmentList from '@/domain/forum/enterprise/entities/answer-atta
 import AnswerAttachment from '@/domain/forum/enterprise/entities/answer-attachment'
 import { Injectable } from '@nestjs/common'
 
-type QuestionAnswerInput = {
+export type QuestionAnswerInput = {
   authorId: string
   questionId: string
   content: string

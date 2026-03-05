@@ -18,4 +18,14 @@ export default class InMemoryAnswerAttachmentsRepository extends AnswerAttachmen
     )
     return Promise.resolve(undefined)
   }
+
+  async createMany(attachments: AnswerAttachment[]): Promise<void> {
+    this.attachments.push(...attachments)
+  }
+
+  async deleteMany(attachments: AnswerAttachment[]): Promise<void> {
+    this.attachments = this.attachments.filter((item) => {
+      return !attachments.some((attachment) => attachment.equals(item))
+    })
+  }
 }

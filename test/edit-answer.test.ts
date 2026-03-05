@@ -1,10 +1,11 @@
 import InMemoryAnswersRepository from './repositories/in-memory-answers-repository'
 import UniqueEntityId from '@/core/entities/unique-entity-id'
-import Answer from '@/domain/forum/enterprise/entities/answer'
-import makeAnswer from './factories/make-answer'
 import EditAnswer from '@/domain/forum/application/use-cases/edit-answer'
 import { UnauthorizedError } from '@/core/errors'
 import InMemoryAnswerAttachmentsRepository from './repositories/in-memory-answer-attachments-repository'
+import Answer from '@/domain/forum/enterprise/entities/answer'
+import makeAnswer from './factories/make-answer'
+import makeAnswerAttachment from './factories/make-answer-attachments'
 
 describe('Edição de resposta', () => {
   let inMemoryAnswersRepository: InMemoryAnswersRepository
@@ -12,9 +13,11 @@ describe('Edição de resposta', () => {
   let sut: EditAnswer
 
   beforeEach(() => {
-    inMemoryAnswersRepository = new InMemoryAnswersRepository()
     inMemoryAnswerAttachmentsRepository =
       new InMemoryAnswerAttachmentsRepository()
+    inMemoryAnswersRepository = new InMemoryAnswersRepository(
+      inMemoryAnswerAttachmentsRepository,
+    )
     sut = new EditAnswer(
       inMemoryAnswersRepository,
       inMemoryAnswerAttachmentsRepository,
@@ -68,5 +71,47 @@ describe('Edição de resposta', () => {
         attachmentsIds: [],
       })
     }).rejects.toBeInstanceOf(UnauthorizedError)
+  })
+
+  it('Deve sincronizar anexos novos e removidos ao editar uma resposta', async () => {
+    const newAnswer: Answer = makeAnswer(
+      { authorId: new UniqueEntityId('author-sinistro') },
+      new UniqueEntityId('to-delete-answer'),
+    )
+    await inMemoryAnswersRepository.create(newAnswer)
+
+    inMemoryAnswerAttachmentsRepository.attachments.push(
+      makeAnswerAttachment({
+        answerId: newAnswer.id,
+        attachmentId: new UniqueEntityId('1'),
+      }),
+    )
+
+    inMemoryAnswerAttachmentsRepository.attachments.push(
+      makeAnswerAttachment({
+        answerId: newAnswer.id,
+        attachmentId: new UniqueEntityId('2'),
+      }),
+    )
+
+    const result = await sut.execute({
+      authorId: newAnswer.authorId.value,
+      answerId: newAnswer.id.value,
+      content: 'Novo Conteúdo',
+      attachmentsIds: ['1', '3'],
+    })
+
+    expect(result.answer.id).toBeTruthy()
+    expect(inMemoryAnswerAttachmentsRepository.attachments).toHaveLength(2)
+    expect(inMemoryAnswerAttachmentsRepository.attachments).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          attachmentId: new UniqueEntityId('1'),
+        }),
+        expect.objectContaining({
+          attachmentId: new UniqueEntityId('3'),
+        }),
+      ]),
+    )
   })
 })
