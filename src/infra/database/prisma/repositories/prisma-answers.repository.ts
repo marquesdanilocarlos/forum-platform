@@ -17,7 +17,12 @@ export class PrismaAnswersRepository extends AnswersRepository {
 
   async create(answer: Answer): Promise<void> {
     const data = PrismaAnswerMapper.toPersistent(answer)
+
     await this.prisma.answer.create({ data })
+
+    await this.answerAttachmentsRepository.createMany(
+      answer.attachments.getItems(),
+    )
   }
 
   async delete(answer: Answer): Promise<void> {
@@ -62,11 +67,20 @@ export class PrismaAnswersRepository extends AnswersRepository {
 
   async save(answer: Answer): Promise<void> {
     const data = PrismaAnswerMapper.toPersistent(answer)
-    await this.prisma.answer.update({
-      where: {
-        id: data.id,
-      },
-      data,
-    })
+
+    await Promise.all([
+      this.prisma.answer.update({
+        where: {
+          id: data.id,
+        },
+        data,
+      }),
+      this.answerAttachmentsRepository.createMany(
+        answer.attachments.getNewItems(),
+      ),
+      this.answerAttachmentsRepository.deleteMany(
+        answer.attachments.getRemovedItems(),
+      ),
+    ])
   }
 }

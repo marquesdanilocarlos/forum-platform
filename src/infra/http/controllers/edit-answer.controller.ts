@@ -28,13 +28,13 @@ export class EditAnswerController {
     @CurrentUser() user: TokenPayloadType,
     @Param('id') id: string,
   ) {
-    const { content } = body
+    const { content, attachments } = body
 
     await this.editAnswer.execute({
       authorId: user.sub,
       answerId: id,
       content,
-      attachmentsIds: [],
+      attachmentsIds: attachments,
     })
   }
 }

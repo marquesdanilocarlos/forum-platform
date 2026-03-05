@@ -30,10 +30,13 @@ export default class AnswerQuestion {
     })
 
     const answerAttachments = attachmentsIds.map((attachmentId) => {
-      return AnswerAttachment.create({
-        attachmentId: new UniqueEntityId(attachmentId),
-        answerId: answer.id,
-      })
+      return AnswerAttachment.create(
+        {
+          attachmentId: new UniqueEntityId(attachmentId),
+          answerId: answer.id,
+        },
+        new UniqueEntityId(attachmentId),
+      )
     })
 
     answer.attachments = new AnswerAttachmentList(answerAttachments)

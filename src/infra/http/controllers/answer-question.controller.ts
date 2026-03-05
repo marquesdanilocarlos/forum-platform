@@ -18,13 +18,13 @@ export class AnswerQuestionController {
     @CurrentUser() user: TokenPayloadType,
     @Param('questionId') questionId: string,
   ) {
-    const { content } = body
+    const { content, attachments } = body
 
     await this.answerQuestion.execute({
       authorId: user.sub,
       questionId,
       content,
-      attachmentsIds: [],
+      attachmentsIds: attachments,
     })
   }
 }

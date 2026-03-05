@@ -46,10 +46,13 @@ export default class EditAnswer {
     const existentAttachments = new AnswerAttachmentList(existentAttachmentsIds)
 
     const attachments = attachmentsIds.map((attachmentId) => {
-      return AnswerAttachment.create({
-        attachmentId: new UniqueEntityId(attachmentId),
-        answerId: answer.id,
-      })
+      return AnswerAttachment.create(
+        {
+          attachmentId: new UniqueEntityId(attachmentId),
+          answerId: answer.id,
+        },
+        new UniqueEntityId(attachmentId),
+      )
     })
 
     existentAttachments.update(attachments)

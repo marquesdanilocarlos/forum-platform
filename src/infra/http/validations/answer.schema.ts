@@ -2,6 +2,7 @@ import { z } from 'zod'
 
 export const createAnswerSchema = z.object({
   content: z.string(),
+  attachments: z.array(z.uuid()).default([]),
 })
 
 export type CreateAnswerType = z.infer<typeof createAnswerSchema>
