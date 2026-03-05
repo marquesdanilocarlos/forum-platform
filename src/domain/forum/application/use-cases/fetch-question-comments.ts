@@ -1,6 +1,6 @@
-import QuestionComment from '@/domain/forum/enterprise/entities/question-comment'
 import QuestionCommentsRepository from '@/domain/forum/application/repositories/question-comments-repository'
 import { Injectable } from '@nestjs/common'
+import CommentWithAuthor from '@/domain/forum/enterprise/entities/value-objects/comment-with-author'
 
 type FetchQuestionCommentsInput = {
   questionId: string
@@ -8,7 +8,7 @@ type FetchQuestionCommentsInput = {
 }
 
 type FetchQuestionCommentsOutput = {
-  questionComments: QuestionComment[]
+  comments: CommentWithAuthor[]
 }
 
 @Injectable()
@@ -19,11 +19,14 @@ export default class FetchQuestionComments {
     questionId,
     page,
   }: FetchQuestionCommentsInput): Promise<FetchQuestionCommentsOutput> {
-    const questionComments =
-      await this.questionCommentsRepository.findManyByQuestionId(questionId, {
-        page,
-      })
+    const comments =
+      await this.questionCommentsRepository.findManyByQuestionIdWithAuthor(
+        questionId,
+        {
+          page,
+        },
+      )
 
-    return { questionComments }
+    return { comments }
   }
 }
