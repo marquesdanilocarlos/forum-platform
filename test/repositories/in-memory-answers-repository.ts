@@ -2,9 +2,17 @@ import AnswersRepository from '@/domain/forum/application/repositories/answers-r
 import Answer from '@/domain/forum/enterprise/entities/answer'
 import PaginationParams from '@/core/types/pagination-params'
 import { DomainEvents } from '@/core/events/domain-events'
+import AnswerAttachmentsRepository from '@/domain/forum/application/repositories/answer-attachments-repository'
 
 export default class InMemoryAnswersRepository extends AnswersRepository {
   public answers: Answer[] = []
+
+  constructor(
+    private answerAttachmentsRepository: AnswerAttachmentsRepository,
+  ) {
+    super()
+  }
+
   async findById(id: string): Promise<Answer | null> {
     const answer =
       this.answers.find((question) => question.id.value === id) ?? null

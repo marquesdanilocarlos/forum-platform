@@ -1,13 +1,19 @@
 import AnswerQuestion from '@/domain/forum/application/use-cases/answer-question'
 import InMemoryAnswersRepository from './repositories/in-memory-answers-repository'
+import InMemoryAnswerAttachmentsRepository from './repositories/in-memory-answer-attachments-repository'
 import UniqueEntityId from '@/core/entities/unique-entity-id'
 
 describe('Criacão de respostas', () => {
   let inMemoryAnswersRepository: InMemoryAnswersRepository
+  let inMemoryAnswerAttachmentsRepository: InMemoryAnswerAttachmentsRepository
   let sut: AnswerQuestion
 
   beforeEach(() => {
-    inMemoryAnswersRepository = new InMemoryAnswersRepository()
+    inMemoryAnswerAttachmentsRepository =
+      new InMemoryAnswerAttachmentsRepository()
+    inMemoryAnswersRepository = new InMemoryAnswersRepository(
+      inMemoryAnswerAttachmentsRepository,
+    )
     sut = new AnswerQuestion(inMemoryAnswersRepository)
   })
 

@@ -1,14 +1,20 @@
 import InMemoryQuestionsRepository from './repositories/in-memory-questions-repository'
+import InMemoryQuestionAttachmentsRepository from './repositories/in-memory-question-attachments-repository'
 import GetQuestionBySlug from '@/domain/forum/application/use-cases/get-question-by-slug'
 import Question from '@/domain/forum/enterprise/entities/question'
 import makeQuestion from './factories/make-question'
 
 describe('Consulta de pergunta', () => {
   let inMemoryQuestionsRepository: InMemoryQuestionsRepository
+  let inMemoryQuestionAttachmentsRepository: InMemoryQuestionAttachmentsRepository
   let sut: GetQuestionBySlug
 
   beforeEach(() => {
-    inMemoryQuestionsRepository = new InMemoryQuestionsRepository()
+    inMemoryQuestionAttachmentsRepository =
+      new InMemoryQuestionAttachmentsRepository()
+    inMemoryQuestionsRepository = new InMemoryQuestionsRepository(
+      inMemoryQuestionAttachmentsRepository,
+    )
     sut = new GetQuestionBySlug(inMemoryQuestionsRepository)
   })
 

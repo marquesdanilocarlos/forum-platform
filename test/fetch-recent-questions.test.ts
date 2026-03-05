@@ -1,13 +1,19 @@
 import InMemoryQuestionsRepository from './repositories/in-memory-questions-repository'
+import InMemoryQuestionAttachmentsRepository from './repositories/in-memory-question-attachments-repository'
 import makeQuestion from './factories/make-question'
 import FetchRecentQuestions from '@/domain/forum/application/use-cases/fetch-recent-questions'
 
 describe('Obtenção de perguntas recentes', () => {
   let inMemoryQuestionsRepository: InMemoryQuestionsRepository
+  let inMemoryQuestionAttachmentsRepository: InMemoryQuestionAttachmentsRepository
   let sut: FetchRecentQuestions
 
   beforeEach(() => {
-    inMemoryQuestionsRepository = new InMemoryQuestionsRepository()
+    inMemoryQuestionAttachmentsRepository =
+      new InMemoryQuestionAttachmentsRepository()
+    inMemoryQuestionsRepository = new InMemoryQuestionsRepository(
+      inMemoryQuestionAttachmentsRepository,
+    )
     sut = new FetchRecentQuestions(inMemoryQuestionsRepository)
   })
 

@@ -4,10 +4,14 @@ import { PrismaService } from '@/infra/database/prisma/prisma.service'
 import Answer from '@/domain/forum/enterprise/entities/answer'
 import { PrismaAnswerMapper } from '@/infra/database/prisma/mappers/prisma-answer.mapper'
 import PaginationParams from '@/core/types/pagination-params'
+import AnswerAttachmentsRepository from '@/domain/forum/application/repositories/answer-attachments-repository'
 
 @Injectable()
 export class PrismaAnswersRepository extends AnswersRepository {
-  constructor(private prisma: PrismaService) {
+  constructor(
+    private prisma: PrismaService,
+    private answerAttachmentsRepository: AnswerAttachmentsRepository,
+  ) {
     super()
   }
 

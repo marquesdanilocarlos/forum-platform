@@ -1,14 +1,20 @@
 import makeAnswer from './factories/make-answer'
 import InMemoryAnswersRepository from './repositories/in-memory-answers-repository'
+import InMemoryAnswerAttachmentsRepository from './repositories/in-memory-answer-attachments-repository'
 import FetchQuestionAnswers from '@/domain/forum/application/use-cases/fetch-question-answers'
 import UniqueEntityId from '@/core/entities/unique-entity-id'
 
 describe('Obtenção de perguntas recentes', () => {
   let inMemoryAnswersRepository: InMemoryAnswersRepository
+  let inMemoryAnswerAttachmentsRepository: InMemoryAnswerAttachmentsRepository
   let sut: FetchQuestionAnswers
 
   beforeEach(() => {
-    inMemoryAnswersRepository = new InMemoryAnswersRepository()
+    inMemoryAnswerAttachmentsRepository =
+      new InMemoryAnswerAttachmentsRepository()
+    inMemoryAnswersRepository = new InMemoryAnswersRepository(
+      inMemoryAnswerAttachmentsRepository,
+    )
     sut = new FetchQuestionAnswers(inMemoryAnswersRepository)
   })
 

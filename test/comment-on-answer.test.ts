@@ -1,17 +1,23 @@
 import makeAnswer from './factories/make-answer'
 import Answer from '@/domain/forum/enterprise/entities/answer'
 import InMemoryAnswersRepository from './repositories/in-memory-answers-repository'
+import InMemoryAnswerAttachmentsRepository from './repositories/in-memory-answer-attachments-repository'
 import InMemoryAnswerCommentsRepository from './repositories/in-memory-answer-comments-repository'
 import CommentOnAnswer from '@/domain/forum/application/use-cases/comment-on-answer'
 
 describe('Comentários de respostas', () => {
   let inMemoryAnswerCommentsRepository: InMemoryAnswerCommentsRepository
   let inMemoryAnswersRepository: InMemoryAnswersRepository
+  let inMemoryAnswerAttachmentsRepository: InMemoryAnswerAttachmentsRepository
   let sut: CommentOnAnswer
 
   beforeEach(() => {
     inMemoryAnswerCommentsRepository = new InMemoryAnswerCommentsRepository()
-    inMemoryAnswersRepository = new InMemoryAnswersRepository()
+    inMemoryAnswerAttachmentsRepository =
+      new InMemoryAnswerAttachmentsRepository()
+    inMemoryAnswersRepository = new InMemoryAnswersRepository(
+      inMemoryAnswerAttachmentsRepository,
+    )
     sut = new CommentOnAnswer(
       inMemoryAnswersRepository,
       inMemoryAnswerCommentsRepository,

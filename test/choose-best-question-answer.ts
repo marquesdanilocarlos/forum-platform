@@ -1,5 +1,7 @@
 import InMemoryQuestionsRepository from './repositories/in-memory-questions-repository'
+import InMemoryQuestionAttachmentsRepository from './repositories/in-memory-question-attachments-repository'
 import InMemoryAnswersRepository from './repositories/in-memory-answers-repository'
+import InMemoryAnswerAttachmentsRepository from './repositories/in-memory-answer-attachments-repository'
 import makeQuestion from './factories/make-question'
 import makeAnswer from './factories/make-answer'
 import ChooseBestQuestionAnswer from '@/domain/forum/application/use-cases/choose-best-question-answer'
@@ -8,12 +10,22 @@ import { UnauthorizedError } from '@/core/errors'
 
 describe('Seleção de melhor resposta para uma pergunta', () => {
   let inMemoryQuestionsRepository: InMemoryQuestionsRepository
+  let inMemoryQuestionAttachmentsRepository: InMemoryQuestionAttachmentsRepository
   let inMemoryAnswersRepository: InMemoryAnswersRepository
+  let inMemoryAnswerAttachmentsRepository: InMemoryAnswerAttachmentsRepository
   let sut: ChooseBestQuestionAnswer
 
   beforeEach(async () => {
-    inMemoryQuestionsRepository = new InMemoryQuestionsRepository()
-    inMemoryAnswersRepository = new InMemoryAnswersRepository()
+    inMemoryQuestionAttachmentsRepository =
+      new InMemoryQuestionAttachmentsRepository()
+    inMemoryQuestionsRepository = new InMemoryQuestionsRepository(
+      inMemoryQuestionAttachmentsRepository,
+    )
+    inMemoryAnswerAttachmentsRepository =
+      new InMemoryAnswerAttachmentsRepository()
+    inMemoryAnswersRepository = new InMemoryAnswersRepository(
+      inMemoryAnswerAttachmentsRepository,
+    )
     sut = new ChooseBestQuestionAnswer(
       inMemoryQuestionsRepository,
       inMemoryAnswersRepository,

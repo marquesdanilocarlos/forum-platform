@@ -2,17 +2,23 @@ import makeQuestion from './factories/make-question'
 import Question from '@/domain/forum/enterprise/entities/question'
 import InMemoryQuestionsRepository from './repositories/in-memory-questions-repository'
 import InMemoryQuestionCommentsRepository from './repositories/in-memory-question-comments-repository'
+import InMemoryQuestionAttachmentsRepository from './repositories/in-memory-question-attachments-repository'
 import CommentOnQuestion from '@/domain/forum/application/use-cases/comment-on-question'
 
 describe('Comentários de perguntas', () => {
   let inMemoryQuestionCommentsRepository: InMemoryQuestionCommentsRepository
   let inMemoryQuestionsRepository: InMemoryQuestionsRepository
+  let inMemoryQuestionAttachmentsRepository: InMemoryQuestionAttachmentsRepository
   let sut: CommentOnQuestion
 
   beforeEach(() => {
     inMemoryQuestionCommentsRepository =
       new InMemoryQuestionCommentsRepository()
-    inMemoryQuestionsRepository = new InMemoryQuestionsRepository()
+    inMemoryQuestionAttachmentsRepository =
+      new InMemoryQuestionAttachmentsRepository()
+    inMemoryQuestionsRepository = new InMemoryQuestionsRepository(
+      inMemoryQuestionAttachmentsRepository,
+    )
     sut = new CommentOnQuestion(
       inMemoryQuestionsRepository,
       inMemoryQuestionCommentsRepository,
