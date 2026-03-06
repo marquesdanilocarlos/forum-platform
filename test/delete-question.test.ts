@@ -6,17 +6,25 @@ import UniqueEntityId from '@/core/entities/unique-entity-id'
 import { UnauthorizedError } from '@/core/errors'
 import makeQuestionAttachment from './factories/make-question-attachments'
 import InMemoryQuestionAttachmentsRepository from './repositories/in-memory-question-attachments-repository'
+import InMemoryAttachmentsRepository from './repositories/in-memory-attachments-repository'
+import InMemoryStudentsRepository from './repositories/in-memory-students-repository'
 
 describe('Deleção de pergunta', () => {
   let inMemoryQuestionsRepository: InMemoryQuestionsRepository
   let inMemoryQuestionAttachmentsRepository: InMemoryQuestionAttachmentsRepository
+  let inMemoryAttachmentsRepository: InMemoryAttachmentsRepository
+  let inMemoryStudentsRepository: InMemoryStudentsRepository
   let sut: DeleteQuestion
 
   beforeEach(() => {
     inMemoryQuestionAttachmentsRepository =
       new InMemoryQuestionAttachmentsRepository()
+    inMemoryAttachmentsRepository = new InMemoryAttachmentsRepository()
+    inMemoryStudentsRepository = new InMemoryStudentsRepository()
     inMemoryQuestionsRepository = new InMemoryQuestionsRepository(
       inMemoryQuestionAttachmentsRepository,
+      inMemoryAttachmentsRepository,
+      inMemoryStudentsRepository,
     )
     sut = new DeleteQuestion(
       inMemoryQuestionsRepository,

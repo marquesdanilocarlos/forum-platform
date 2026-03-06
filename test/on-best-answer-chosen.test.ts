@@ -3,6 +3,8 @@ import InMemoryAnswersRepository from './repositories/in-memory-answers-reposito
 import InMemoryAnswerAttachmentsRepository from './repositories/in-memory-answer-attachments-repository'
 import InMemoryQuestionsRepository from './repositories/in-memory-questions-repository'
 import InMemoryQuestionAttachmentsRepository from './repositories/in-memory-question-attachments-repository'
+import InMemoryAttachmentsRepository from './repositories/in-memory-attachments-repository'
+import InMemoryStudentsRepository from './repositories/in-memory-students-repository'
 import SendNotification, {
   SendNotificationInput,
 } from '@/domain/notification/application/use-cases/send-notification'
@@ -17,6 +19,8 @@ let inMemoryAnswersRepository: InMemoryAnswersRepository
 let inMemoryAnswerAttachmentsRepository: InMemoryAnswerAttachmentsRepository
 let inMemoryquestionsRepository: InMemoryQuestionsRepository
 let inMemoryQuestionAttachmentsRepository: InMemoryQuestionAttachmentsRepository
+let inMemoryAttachmentsRepository: InMemoryAttachmentsRepository
+let inMemoryStudentsRepository: InMemoryStudentsRepository
 let sendNotification: SendNotification
 let inMemoryNotificationRepository: InMemoryNotificationsRepository
 let sendNotificationSpy: Mock<
@@ -29,10 +33,14 @@ beforeEach(() => {
   inMemoryAnswersRepository = new InMemoryAnswersRepository(
     inMemoryAnswerAttachmentsRepository,
   )
+  inMemoryAttachmentsRepository = new InMemoryAttachmentsRepository()
+  inMemoryStudentsRepository = new InMemoryStudentsRepository()
   inMemoryQuestionAttachmentsRepository =
     new InMemoryQuestionAttachmentsRepository()
   inMemoryquestionsRepository = new InMemoryQuestionsRepository(
     inMemoryQuestionAttachmentsRepository,
+    inMemoryAttachmentsRepository,
+    inMemoryStudentsRepository,
   )
   inMemoryNotificationRepository = new InMemoryNotificationsRepository()
   sendNotification = new SendNotification(inMemoryNotificationRepository)

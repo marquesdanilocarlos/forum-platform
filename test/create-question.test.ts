@@ -4,17 +4,25 @@ import CreateQuestion, {
 import InMemoryQuestionsRepository from './repositories/in-memory-questions-repository'
 import UniqueEntityId from '@/core/entities/unique-entity-id'
 import InMemoryQuestionAttachmentsRepository from './repositories/in-memory-question-attachments-repository'
+import InMemoryAttachmentsRepository from './repositories/in-memory-attachments-repository'
+import InMemoryStudentsRepository from './repositories/in-memory-students-repository'
 
 describe('Teste de criação de pergunta', () => {
   let inMemoryQuestionsRepository: InMemoryQuestionsRepository
   let inMemoryQuestionAttachmentsRepository: InMemoryQuestionAttachmentsRepository
+  let inMemoryAttachmentsRepository: InMemoryAttachmentsRepository
+  let inMemoryStudentsRepository: InMemoryStudentsRepository
   let sut: CreateQuestion
 
   beforeEach(async () => {
     inMemoryQuestionAttachmentsRepository =
       new InMemoryQuestionAttachmentsRepository()
+    inMemoryAttachmentsRepository = new InMemoryAttachmentsRepository()
+    inMemoryStudentsRepository = new InMemoryStudentsRepository()
     inMemoryQuestionsRepository = new InMemoryQuestionsRepository(
       inMemoryQuestionAttachmentsRepository,
+      inMemoryAttachmentsRepository,
+      inMemoryStudentsRepository,
     )
     sut = new CreateQuestion(inMemoryQuestionsRepository)
   })
