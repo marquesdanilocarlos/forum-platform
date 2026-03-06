@@ -1,15 +1,15 @@
 import QuestionsRepository from '@/domain/forum/application/repositories/questions-repository'
 import Slug from '@/domain/forum/enterprise/entities/value-objects/slug'
-import Question from '@/domain/forum/enterprise/entities/question'
 import { NotFoundError } from '@/core/errors'
 import { Injectable } from '@nestjs/common'
+import QuestionDetails from '@/domain/forum/enterprise/entities/value-objects/question-details'
 
 type GetQuestionBySlugInput = {
   slug: string
 }
 
 type GetQuestionBySlugOutput = {
-  question: Question
+  question: QuestionDetails
 }
 
 @Injectable()
@@ -19,7 +19,7 @@ export default class GetQuestionBySlug {
   async execute({
     slug,
   }: GetQuestionBySlugInput): Promise<GetQuestionBySlugOutput> {
-    const question = await this.questionsRepository.findBySlug(
+    const question = await this.questionsRepository.findDetailsBySlug(
       Slug.create(slug),
     )
 

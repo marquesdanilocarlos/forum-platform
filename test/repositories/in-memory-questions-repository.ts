@@ -3,13 +3,19 @@ import Question from '@/domain/forum/enterprise/entities/question'
 import Slug from '@/domain/forum/enterprise/entities/value-objects/slug'
 import PaginationParams from '@/core/types/pagination-params'
 import { DomainEvents } from '@/core/events/domain-events'
-import QuestionAttachmentsRepository from '@/domain/forum/application/repositories/question-attachments-repository'
+import QuestionDetails from '@/domain/forum/enterprise/entities/value-objects/question-details'
+import InMemoryAttachmentsRepository from './in-memory-attachments-repository'
+import InMemoryStudentsRepository from './in-memory-students-repository'
+import InMemoryQuestionAttachmentsRepository from './in-memory-question-attachments-repository'
+import { NotFoundError } from '@/core/errors'
 
 export default class InMemoryQuestionsRepository implements QuestionsRepository {
   public questions: Question[] = []
 
   constructor(
-    private questionAttachmentsRepository: QuestionAttachmentsRepository,
+    private questionAttachmentsRepository: InMemoryQuestionAttachmentsRepository,
+    private attachmentsRepository: InMemoryAttachmentsRepository,
+    private studentsRepository: InMemoryStudentsRepository,
   ) {}
 
   async findById(id: string): Promise<Question | null> {
@@ -38,7 +44,7 @@ export default class InMemoryQuestionsRepository implements QuestionsRepository 
     return Promise.resolve(question)
   }
 
-  findBySlug(slug: Slug): Promise<Question | null> {
+  async findBySlug(slug: Slug): Promise<Question | null> {
     const question =
       this.questions.find((question) => question.slug.value === slug.value) ??
       null
@@ -69,5 +75,59 @@ export default class InMemoryQuestionsRepository implements QuestionsRepository 
       .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
       .slice((page - 1) * 20, page * 20)
     return Promise.resolve(questions)
+  }
+
+  async findDetailsBySlug(slug: Slug): Promise<QuestionDetails | null> {
+    const question =
+      this.questions.find((question) => question.slug.value === slug.value) ??
+      null
+
+    if (!question) {
+      throw new NotFoundError('Pergunta não encontrada.')
+    }
+
+    const author = this.studentsRepository.students.find((student) => {
+      return student.id.equals(question.authorId)
+    })
+
+    if (!author) {
+      throw new NotFoundError('Autor não existe.')
+    }
+
+    const questionAttachments =
+      this.questionAttachmentsRepository.attachments.filter(
+        (questionAttachment) => {
+          return questionAttachment.questionId.equals(question.id)
+        },
+      )
+
+    const attachments = questionAttachments.map((questionAttachment) => {
+      const attachment = this.attachmentsRepository.attachments.find(
+        (attachment) => {
+          return attachment.id.equals(questionAttachment.attachmentId)
+        },
+      )
+
+      if (!attachment) {
+        throw new NotFoundError(
+          `Anexo com o id ${questionAttachment.attachmentId.value} não existe.`,
+        )
+      }
+
+      return attachment
+    })
+
+    return QuestionDetails.create({
+      questionId: question.id,
+      authorId: question.authorId,
+      authorName: author.name,
+      title: question.title,
+      slug: question.slug.value,
+      content: question.content,
+      bestAnswerId: question.bestAnswerId,
+      attachments,
+      createdAt: question.createdAt,
+      updatedAt: question.updatedAt,
+    })
   }
 }
