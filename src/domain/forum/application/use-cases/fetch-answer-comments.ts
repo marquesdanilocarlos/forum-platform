@@ -1,6 +1,6 @@
 import AnswerCommentsRepository from '@/domain/forum/application/repositories/answer-comments-repository'
 import { Injectable } from '@nestjs/common'
-import { CommentWithAuthorProps } from '@/domain/forum/enterprise/entities/value-objects/comment-with-author'
+import CommentWithAuthor from '@/domain/forum/enterprise/entities/value-objects/comment-with-author'
 
 type FetchAnswerCommentsInput = {
   answerId: string
@@ -8,7 +8,7 @@ type FetchAnswerCommentsInput = {
 }
 
 type FetchAnswerCommentsOutput = {
-  comments: CommentWithAuthorProps[]
+  comments: CommentWithAuthor[]
 }
 
 @Injectable()

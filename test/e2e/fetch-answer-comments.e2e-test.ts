@@ -40,7 +40,7 @@ describe('Listagem comentários de uma resposta E2E', () => {
 
   test('Deve listar comentários de uma resposta', async () => {
     const user = await studentPrismaFactory.makePrismaStudent({
-      name: 'John Doe',
+      name: 'John Maykao',
       email: 'john.maykao@yahoo.com',
       password: await hash('123456', 8),
     })
@@ -75,10 +75,16 @@ describe('Listagem comentários de uma resposta E2E', () => {
       .send()
 
     expect(response.statusCode).toBe(200)
-    expect(response.body.answerComments).toEqual(
+    expect(response.body.comments).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ content: comment01.content }),
-        expect.objectContaining({ content: comment02.content }),
+        expect.objectContaining({
+          content: comment01.content,
+          authorName: 'John Maykao',
+        }),
+        expect.objectContaining({
+          content: comment02.content,
+          authorName: 'John Maykao',
+        }),
       ]),
     )
   })

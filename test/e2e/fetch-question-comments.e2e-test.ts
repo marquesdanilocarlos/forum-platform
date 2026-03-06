@@ -7,7 +7,6 @@ import { JwtService } from '@nestjs/jwt'
 import StudentPrismaFactory from '../factories/student-prisma-factory'
 import QuestionPrismaFactory from '../factories/question-prisma-factory'
 import { DatabaseModule } from '@/infra/database/database.module'
-import AnswerPrismaFactory from '../factories/answer-prisma-factory'
 import QuestionCommentPrismaFactory from '../factories/question-comment-prisma-factory'
 
 describe('Listagem comentários de uma pergunta E2E', () => {

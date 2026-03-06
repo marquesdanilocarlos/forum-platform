@@ -12,7 +12,7 @@ import {
 } from '@/infra/http/validations/answer.schema'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation.pipe'
 import FetchAnswerComments from '@/domain/forum/application/use-cases/fetch-answer-comments'
-import CommentPresenter from '@/infra/http/presenter/comment.presenter'
+import CommentWithAuthorPresenter from '@/infra/http/presenter/comment-with-author.presenter'
 
 @Injectable()
 @Controller('/answers/:id/comments')
@@ -25,18 +25,18 @@ export class FetchAnswerCommentsController {
     page: PageQueryParamType,
     @Param('id') id: string,
   ) {
-    const { answerComments } = await this.fetchAnswerComments.execute({
+    const { comments } = await this.fetchAnswerComments.execute({
       page,
       answerId: id,
     })
 
-    if (!answerComments) {
+    if (!comments) {
       throw new NotFoundException('Nenhum comentário encontrado.')
     }
 
     return {
-      answerComments: answerComments.map((answerComment) =>
-        CommentPresenter.toHttp(answerComment),
+      comments: comments.map((answerComment) =>
+        CommentWithAuthorPresenter.toHttp(answerComment),
       ),
     }
   }
