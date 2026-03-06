@@ -67,10 +67,16 @@ describe('Listagem comentários de uma pergunta E2E', () => {
       .send()
 
     expect(response.statusCode).toBe(200)
-    expect(response.body.questionComments).toEqual(
+    expect(response.body.comments).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ content: comment01.content }),
-        expect.objectContaining({ content: comment02.content }),
+        expect.objectContaining({
+          content: comment01.content,
+          authorName: 'John Doe',
+        }),
+        expect.objectContaining({
+          content: comment02.content,
+          authorName: 'John Doe',
+        }),
       ]),
     )
   })
