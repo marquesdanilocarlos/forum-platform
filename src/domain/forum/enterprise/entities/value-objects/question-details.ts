@@ -1,13 +1,14 @@
 import ValueObject from '@/core/entities/value-object'
 import UniqueEntityId from '@/core/entities/unique-entity-id'
 import Attachment from '@/domain/forum/enterprise/entities/attachment'
+import Slug from '@/domain/forum/enterprise/entities/value-objects/slug'
 
 export type QuestionDetailsProps = {
   questionId: UniqueEntityId
   authorId: UniqueEntityId
   authorName: string
   title: string
-  slug: string
+  slug: Slug
   content: string
   attachments: Attachment[]
   bestAnswerId?: UniqueEntityId | null

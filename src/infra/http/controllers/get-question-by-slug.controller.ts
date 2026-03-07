@@ -1,6 +1,6 @@
 import { BadRequestException, Controller, Get, Param } from '@nestjs/common'
 import GetQuestionBySlug from '@/domain/forum/application/use-cases/get-question-by-slug'
-import { QuestionPresenter } from '@/infra/http/presenter/question-presenter'
+import { QuestionDetailsPresenter } from '@/infra/http/presenter/question-details.presenter'
 
 @Controller('/questions/:slug')
 export default class GetQuestionBySlugController {
@@ -14,6 +14,6 @@ export default class GetQuestionBySlugController {
       throw new BadRequestException('Pergunta não encontrada!')
     }
 
-    return { question: QuestionPresenter.toHttp(question) }
+    return { question: QuestionDetailsPresenter.toHttp(question) }
   }
 }

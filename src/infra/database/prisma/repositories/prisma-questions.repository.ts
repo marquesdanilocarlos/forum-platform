@@ -6,6 +6,8 @@ import Question from '@/domain/forum/enterprise/entities/question'
 import Slug from '@/domain/forum/enterprise/entities/value-objects/slug'
 import PaginationParams from '@/core/types/pagination-params'
 import QuestionAttachmentsRepository from '@/domain/forum/application/repositories/question-attachments-repository'
+import QuestionDetails from '@/domain/forum/enterprise/entities/value-objects/question-details'
+import PrismaQuestionDetailsMapper from '@/infra/database/prisma/mappers/prisma-question-details.mapper'
 
 @Injectable()
 export class PrismaQuestionsRepository implements QuestionsRepository {
@@ -92,5 +94,23 @@ export class PrismaQuestionsRepository implements QuestionsRepository {
     ])
 
     return question
+  }
+
+  async findDetailsBySlug(slug: Slug): Promise<QuestionDetails | null> {
+    const question = await this.prisma.question.findUnique({
+      where: {
+        slug: slug.value,
+      },
+      include: {
+        author: true,
+        attachments: true,
+      },
+    })
+
+    if (!question) {
+      return null
+    }
+
+    return PrismaQuestionDetailsMapper.toDomain(question)
   }
 }
