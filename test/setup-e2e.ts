@@ -1,6 +1,7 @@
 import { PrismaClient } from '../generated/prisma/client'
 import { PrismaPg } from '@prisma/adapter-pg'
 import { config } from 'dotenv'
+import { DomainEvents } from '@/core/events/domain-events'
 
 config({ path: '.env.test' })
 
@@ -20,6 +21,10 @@ async function dropTestSchema() {
     await prisma.$disconnect()
   }
 }
+
+beforeAll(() => {
+  DomainEvents.shouldRun = false
+})
 
 beforeEach(async () => {
   console.log('🧹 Limpando ambiente de testes...')
