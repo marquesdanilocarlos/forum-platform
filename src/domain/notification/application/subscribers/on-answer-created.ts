@@ -5,7 +5,9 @@ import { DomainEvent } from '@/core/events/domain-event'
 import QuestionsRepository from '@/domain/forum/application/repositories/questions-repository'
 import SendNotification from '@/domain/notification/application/use-cases/send-notification'
 import { NotFoundError } from '@/core/errors'
+import { Injectable } from '@nestjs/common'
 
+@Injectable()
 export default class OnAnswerCreated implements EventHandler {
   constructor(
     private questionsRepository: QuestionsRepository,

@@ -1,6 +1,7 @@
 import Notification from '@/domain/notification/enterprise/notification'
 import UniqueEntityId from '@/core/entities/unique-entity-id'
-import NotificationRepository from '@/domain/notification/application/repositories/notifications-repository'
+import NotificationsRepository from '@/domain/notification/application/repositories/notifications-repository'
+import { Injectable } from '@nestjs/common'
 
 export type SendNotificationInput = {
   recipientId: string
@@ -8,8 +9,9 @@ export type SendNotificationInput = {
   content: string
 }
 
+@Injectable()
 export default class SendNotification {
-  constructor(private notificationRepository: NotificationRepository) {}
+  constructor(private notificationRepository: NotificationsRepository) {}
 
   async execute(input: SendNotificationInput) {
     const { recipientId, title, content } = input

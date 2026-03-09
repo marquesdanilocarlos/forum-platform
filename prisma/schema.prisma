@@ -14,14 +14,15 @@ enum UserRole {
 }
 
 model User {
-  id        String     @id @default(uuid())
-  name      String
-  email     String     @unique
-  password  String
-  questions Question[]
-  role      UserRole   @default(STUDENT)
-  answers   Answer[]
-  comments  Comment[]
+  id            String         @id @default(uuid())
+  name          String
+  email         String         @unique
+  password      String
+  questions     Question[]
+  role          UserRole       @default(STUDENT)
+  answers       Answer[]
+  comments      Comment[]
+  notifications Notification[]
 
   @@map("users")
 }
@@ -97,4 +98,15 @@ model Attachment {
   answer   Answer? @relation(fields: [answerId], references: [id])
 
   @@map("attachments")
+}
+
+model Notification {
+  id        String    @id @default(uuid())
+  title     String
+  content   String
+  readAt    DateTime? @map("read_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  recipientId String @map("recipient_id")
+  recipient   User   @relation(fields: [recipientId], references: [id])
 }
