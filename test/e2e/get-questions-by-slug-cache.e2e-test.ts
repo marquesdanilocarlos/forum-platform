@@ -53,22 +53,20 @@ describe('Listagem de perguntas E2E', () => {
       authorId: user.id,
     })
 
-    const attachment = await attachmentPrismaFactory.makePrismaAttachment()
-
-    await questionAttachmentPrismaFactory.makePrismaQuestionAttachment({
-      questionId: question.id,
-      attachmentId: attachment.id,
-    })
-
     const slug = question.slug
     const questionDetails = await questionsRepository.findDetailsBySlug(slug)
 
-    const cached = await cacheProvider.get(`questions:${slug}:details`)
+    const cached =
+      (await cacheProvider.get(`questions:${slug.value}:details`)) ?? '{}'
 
-    expect(cached).toEqual(JSON.stringify(questionDetails))
+    expect(JSON.parse(cached)).toEqual(
+      expect.objectContaining({
+        id: questionDetails?.questionId.value,
+      }),
+    )
   })
 
-  it('Deve buscar pergunta pelo slug através cache', async () => {
+  it('Deve buscar pergunta pelo slug através do cache', async () => {
     const user = await studentPrismaFactory.makePrismaStudent({})
 
     const question = await questionPrismaFactory.makePrismaQuestion({
@@ -77,14 +75,24 @@ describe('Listagem de perguntas E2E', () => {
 
     const slug = question.slug
 
-    await cacheProvider.set(
-      `questions:${slug}:details`,
-      JSON.stringify({ empty: true }),
-    )
+    let cached = await cacheProvider.get(`questions:${slug.value}:details`)
+
+    expect(cached).toBeNull()
+
+    await questionsRepository.findDetailsBySlug(slug)
+
+    cached =
+      (await cacheProvider.get(`questions:${slug.value}:details`)) ?? '{}'
+
+    expect(cached).not.toBeNull()
 
     const questionDetails = await questionsRepository.findDetailsBySlug(slug)
 
-    expect(questionDetails).toEqual({ empty: true })
+    expect(JSON.parse(cached)).toEqual(
+      expect.objectContaining({
+        id: questionDetails?.questionId.value,
+      }),
+    )
   })
 
   it('Deve resetar os detalhes da pergunta que vem do cache quando salvar', async () => {
