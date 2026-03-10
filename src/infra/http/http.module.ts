@@ -40,6 +40,8 @@ import FetchAnswerComments from '@/domain/forum/application/use-cases/fetch-answ
 import { UploadAttachmentController } from '@/infra/http/controllers/upload-attachment.controller'
 import { StorageModule } from '@/infra/storage/storage.module'
 import UploadAndCreateAttachment from '@/domain/forum/application/use-cases/upload-and-create-attachment'
+import ReadNotificationController from '@/infra/http/controllers/read-notification.controller'
+import ReadNotification from '@/domain/notification/application/use-cases/read-notification'
 
 @Module({
   imports: [DatabaseModule, CryptographyModule, StorageModule],
@@ -63,6 +65,7 @@ import UploadAndCreateAttachment from '@/domain/forum/application/use-cases/uplo
     FetchQuestionCommentsController,
     FetchAnswerCommentsController,
     UploadAttachmentController,
+    ReadNotificationController,
   ],
   providers: [
     CreateQuestion,
@@ -84,6 +87,7 @@ import UploadAndCreateAttachment from '@/domain/forum/application/use-cases/uplo
     FetchQuestionComments,
     FetchAnswerComments,
     UploadAndCreateAttachment,
+    ReadNotification,
   ],
 })
 export class HttpModule {}

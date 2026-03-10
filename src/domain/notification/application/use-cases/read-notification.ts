@@ -1,11 +1,12 @@
 import NotificationRepository from '@/domain/notification/application/repositories/notifications-repository'
 import { NotFoundError, UnauthorizedError } from '@/core/errors'
+import { Injectable } from '@nestjs/common'
 
 export type ReadNotificationInput = {
   recipientId: string
   notificationId: string
 }
-
+@Injectable()
 export default class ReadNotification {
   constructor(private notificationRepository: NotificationRepository) {}
 
