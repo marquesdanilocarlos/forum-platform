@@ -33,6 +33,15 @@ services:
     volumes:
       - database-rocketseat:/bitnami/postgresql
 
+  redis:
+    container_name: redis-nestjs
+    image: redis
+    ports:
+      - 6379:6379
+    volumes:
+      - redis-rocketseat:/data
+
 volumes:
   node_modules:
   database-rocketseat:
+  redis-rocketseat:

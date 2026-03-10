@@ -10,6 +10,9 @@ export const envSchema = z.object({
   STORAGE_SECRET_ACCESS_KEY: z.string(),
   STORAGE_BUCKET_NAME: z.union([z.string(), z.number()]),
   STORAGE_REGION: z.string().optional().default('auto'),
+  REDIS_HOST: z.string().optional().default('redis'),
+  REDIS_PORT: z.coerce.number().optional().default(6379),
+  REDIS_DB: z.coerce.number().optional().default(0),
 })
 
 export type EnvSchema = z.infer<typeof envSchema>

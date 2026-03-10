@@ -8,6 +8,7 @@ import { CryptographyModule } from './criptography/cryptography.module'
 import { EnvModule } from './env/env.module'
 import { StorageModule } from './storage/storage.module'
 import { EventModule } from './event/event.module'
+import { CacheModule } from './cache/cache.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { EventModule } from './event/event.module'
     CryptographyModule,
     StorageModule,
     EventModule,
+    CacheModule,
   ],
   providers: [JwtStrategy],
 })
