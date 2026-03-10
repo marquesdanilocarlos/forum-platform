@@ -13,7 +13,7 @@ export default class RedisCacheAdapter extends CacheProvider {
   }
 
   async delete(key: string): Promise<void> {
-    this.redisService.del(key)
+    await this.redisService.del(key)
   }
 
   async set(key: string, value: string): Promise<void> {

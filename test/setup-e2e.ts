@@ -2,11 +2,21 @@ import { PrismaClient } from '../generated/prisma/client'
 import { PrismaPg } from '@prisma/adapter-pg'
 import { config } from 'dotenv'
 import { DomainEvents } from '@/core/events/domain-events'
+import Redis from 'ioredis'
+import { envSchema } from '@/infra/env/env.schema'
 
 config({ path: '.env.test' })
 
+const env = envSchema.parse(process.env)
+
+const redis = new Redis({
+  host: env.REDIS_HOST,
+  port: env.REDIS_PORT,
+  db: env.REDIS_DB,
+})
+
 async function dropTestSchema() {
-  const connectionString = process.env.DATABASE_URL!
+  const connectionString = env.DATABASE_URL!
   const adapter = new PrismaPg({ connectionString })
   const prisma = new PrismaClient({
     adapter,
@@ -22,8 +32,9 @@ async function dropTestSchema() {
   }
 }
 
-beforeAll(() => {
+beforeAll(async () => {
   DomainEvents.shouldRun = false
+  await redis.flushdb()
 })
 
 beforeEach(async () => {
